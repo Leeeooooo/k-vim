@@ -1,9 +1,11 @@
 "==========================================
-" Author: Leo
-" Version: 1.2.2
-" Email: yli97@jmc.com.cn
+" Author:  wklken
+" Version: 9.3
+" Email: wklken@gmail.com
+" BlogPost: http://www.wklken.me
 " ReadMe: README.md
-" Last_modify: 2019-03-27
+" Donation: http://www.wklken.me/pages/donation.html
+" Last_modify: 2019-05-04
 " Sections:
 "       -> Initial Plugin 加载插件
 "       -> General Settings 基础设置
@@ -31,9 +33,9 @@ syntax on
 
 " install bundles
 if filereadable(expand("~/.vimrc.bundles"))
-    source ~/.vimrc.bundles
+  source ~/.vimrc.bundles
 elseif filereadable(expand("~/.config/nvim/vimrc.bundles")) " neovim
-    source ~/.config/nvim/vimrc.bundles
+  source ~/.config/nvim/vimrc.bundles
 endif
 
 " ensure ftdetect et al work by including this after the bundle stuff
@@ -97,18 +99,20 @@ set cursorline
 
 " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉
 " 好处：误删什么的，如果以前屏幕打开，可以找回
-" set t_ti= t_te=
+set t_ti= t_te=
 
 
+" 鼠标暂不启用, 键盘党....
+set mouse-=a
 " 启用鼠标
-set mouse=a
+" set mouse=a
 " Hide the mouse cursor while typing
 " set mousehide
 
 
 " 修复ctrl+m 多光标操作选择的bug，但是改变了ctrl+v进行字符选中时将包含光标下的字符
-" set selection=inclusive
-" set selectmode=mouse,key
+set selection=inclusive
+set selectmode=mouse,key
 
 " change the terminal's title
 set title
@@ -135,7 +139,7 @@ set whichwrap+=<,>,h,l
 " 显示当前的行号列号
 set ruler
 " 在状态栏显示正在输入的命令
-" set showcmd
+set showcmd
 " 左下角显示当前vim模式
 set showmode
 
@@ -224,28 +228,37 @@ set ttyfast
 set nrformats=
 
 " 相对行号: 行号变成相对，可以用 nj/nk 进行跳转
-" set relativenumber number
-" au FocusLost * :set norelativenumber number
-" au FocusGained * :set relativenumber
+set relativenumber number
+au FocusLost * :set norelativenumber number
+au FocusGained * :set relativenumber
 " 插入模式下用绝对行号, 普通模式下用相对
-" autocmd InsertEnter * :set norelativenumber number
-" autocmd InsertLeave * :set  relativenumber
-" function! NumberToggle()
-"     if(&relativenumber == 1)
-"        set norelativenumber number
-"    else
-"        set relativenumber
-"    endif
-" endfunc
-" nnoremap <C-n> :call NumberToggle()<cr>
+autocmd InsertEnter * :set norelativenumber number
+autocmd InsertLeave * :set relativenumber
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set norelativenumber number
+  else
+    set relativenumber
+  endif
+endfunc
+nnoremap <C-n> :call NumberToggle()<cr>
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
 
 " 防止tmux下vim的背景色显示异常
 " Refer: http://sunaku.github.io/vim-256color-bce.html
 if &term =~ '256color'
-    " disable Background Color Erase (BCE) so that color schemes
-    " render properly when inside 256-color tmux and GNU screen.
-    " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
-    set t_ut=
+  " disable Background Color Erase (BCE) so that color schemes
+  " render properly when inside 256-color tmux and GNU screen.
+  " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
+  set t_ut=
 endif
 
 "==========================================
@@ -274,7 +287,7 @@ set formatoptions+=B
 " others 其它设置
 "==========================================
 " vimrc文件修改之后自动加载, windows
-" autocmd! bufwritepost _vimrc source %
+autocmd! bufwritepost _vimrc source %
 " vimrc文件修改之后自动加载, linux
 autocmd! bufwritepost .vimrc source %
 
@@ -312,7 +325,7 @@ inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
 
 " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
 if has("autocmd")
-    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
 "==========================================
@@ -322,17 +335,17 @@ endif
 " 主要按键重定义
 
 " 关闭方向键, 强迫自己用 hjkl
-" map <Left> <Nop>
-" map <Right> <Nop>
-" map <Up> <Nop>
-" map <Down> <Nop>
+map <Left> <Nop>
+map <Right> <Nop>
+map <Up> <Nop>
+map <Down> <Nop>
 
-" Treat long lines as break lines (useful when moving around in them)
-" se swap之后，同物理行上线直接跳
-" nnoremap k gk
-" nnoremap gk k
-" nnoremap j gj
-" nnoremap gj j
+"Treat long lines as break lines (useful when moving around in them)
+"se swap之后，同物理行上线直接跳
+nnoremap k gk
+nnoremap gk k
+nnoremap j gj
+nnoremap gj j
 
 " F1 - F6 设置
 
@@ -342,54 +355,43 @@ noremap <F1> <Esc>"
 
 " F2 行号开关，用于鼠标复制代码用
 " 为方便复制，用<F2>开启/关闭行号显示:
-" function! HideNumber()
-"   if(&relativenumber == &number)
-"     set relativenumber! number!
-"   elseif(&number)
-"     set number!
-"   else
-"     set relativenumber!
-"   endif
-"   set number?
-" endfunc
-" nnoremap <F2> :call HideNumber()<CR>
+function! HideNumber()
+  if(&relativenumber == &number)
+    set relativenumber! number!
+  elseif(&number)
+    set number!
+  else
+    set relativenumber!
+  endif
+  set number?
+endfunc
+nnoremap <F2> :call HideNumber()<CR>
 " F3 显示可打印字符开关
-" nnoremap <F3> :set list! list?<CR>
+nnoremap <F3> :set list! list?<CR>
 " F4 换行开关
 nnoremap <F4> :set wrap! wrap?<CR>
 
 " F6 语法开关，关闭语法可以加快大文件的展示
-" nnoremap <F6> :exec exists('syntax_on') ? 'syn off' : 'syn on'<CR>
+nnoremap <F6> :exec exists('syntax_on') ? 'syn off' : 'syn on'<CR>
 
-" set pastetoggle=<F5>            "    when in insert mode, press <F5> to go to
+set pastetoggle=<F5>            "    when in insert mode, press <F5> to go to
                                 "    paste mode, where you can paste mass data
                                 "    that won't be autoindented
 
 " disbale paste mode when leaving insert mode
-" au InsertLeave * set nopaste
+au InsertLeave * set nopaste
 
 " F5 set paste问题已解决, 粘贴代码前不需要按F5了
 " F5 粘贴模式paste_mode开关,用于有格式的代码粘贴
 " Automatically set paste mode in Vim when pasting in insert mode
-" function! XTermPasteBegin()
-"   set pastetoggle=<Esc>[201~
-"   set paste
-"   return ""
-" endfunction
-" inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
-if &term =~ "xterm.*"
-    let &t_ti = &t_ti . "\e[?2004h"
-    let &t_te = "\e[?2004l" . &t_te
-    function XTermPasteBegin(ret)
-        set pastetoggle=<Esc>[201~
-        set paste
-        return a:ret
-    endfunction
-    map <expr> <Esc>[200~ XTermPasteBegin("i")
-    imap <expr> <Esc>[200~ XTermPasteBegin("")
-    cmap <Esc>[200~ <nop>
-    cmap <Esc>[201~ <nop>
-endif
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+
 
 " 分屏窗口移动, Smart way to move between windows
 map <C-j> <C-W>j
@@ -416,14 +418,17 @@ nnoremap <silent> <Leader>z :ZoomToggle<CR>
 
 
 " Go to home and end using capitalized directions
-
-noremap J G
 noremap H ^
 noremap L $
-noremap K gg
+
 
 " Map ; to : and save a million keystrokes 用于快速进入命令行
 nnoremap ; :
+
+
+" 插入模式跳转到括号尾部
+" https://stackoverflow.com/questions/11037825/how-can-i-go-to-end-of-parenthesis-brackets-quotes-without-switching-insert-mode
+inoremap <C-e> <C-o>A
 
 
 " 命令行模式增强，ctrl - a到行首， -e 到行尾
@@ -464,8 +469,8 @@ autocmd BufNewFile,BufRead *.py inoremap # X<c-h>#
 nnoremap [b :bprevious<cr>
 nnoremap ]b :bnext<cr>
 " 使用方向键切换buffer
-" noremap <left> :bp<CR>
-" noremap <right> :bn<CR>
+noremap <left> :bp<CR>
+noremap <right> :bn<CR>
 
 
 " tab 操作
@@ -478,8 +483,8 @@ map <leader>tl :tablast<cr>
 
 map <leader>tj :tabnext<cr>
 map <leader>tk :tabprev<cr>
-" map <leader>tn :tabnext<cr>
-" map <leader>tp :tabprev<cr>
+map <leader>tn :tabnext<cr>
+map <leader>tp :tabprev<cr>
 
 map <leader>te :tabedit<cr>
 map <leader>td :tabclose<cr>
@@ -521,15 +526,16 @@ vnoremap > >gv
 map Y y$
 
 " 复制选中区到系统剪切板中
-" vnoremap <leader>y "+y
-" 选中状态下 Ctrl+c 复制
-vmap <C-c> "+y
-"共享剪贴板
-set clipboard=unnamed
+vnoremap <leader>y "+y
+
 " auto jump to end of select
 " vnoremap <silent> y y`]
 " vnoremap <silent> p p`]
 " nnoremap <silent> p p`]
+
+" shift-j/k 上下移动选中代码块
+vnoremap <silent> <s-J> :m '>+1<CR>gv=gv
+vnoremap <silent> <s-K> :m '<-2<CR>gv=gv
 
 " select all
 map <Leader>sa ggVG
@@ -604,64 +610,18 @@ autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,pe
 
 
 " 定义函数AutoSetFileHead，自动插入文件头
-autocmd BufNewFile *.cpp,*.[ch],*.sh,*.rb,*.java,*.py exec ":call AutoSetFileHead()"
+autocmd BufNewFile *.sh,*.py exec ":call AutoSetFileHead()"
 function! AutoSetFileHead()
+    "如果文件类型为.sh文件
+    if &filetype == 'sh'
+        call setline(1, "\#!/bin/bash")
+    endif
+
+    "如果文件类型为python
     if &filetype == 'python'
-        "如果文件类型为python
         " call setline(1, "\#!/usr/bin/env python")
         " call append(1, "\# encoding: utf-8")
         call setline(1, "\# -*- coding: utf-8 -*-")
-
-    elseif &filetype == 'sh'
-        "如果文件类型为sh
-        call setline(1,"\#####################################################")
-        call append(line("."), "\# File Name: ".expand("%"))
-        call append(line(".")+1, "\# Author: Leo")
-        call append(line(".")+2, "\# mail: yli97@jmc.com.cn")
-        call append(line(".")+3, "\# Created Time: ".strftime("%c"))
-        call append(line(".")+4, "\#####################################################")
-        call append(line(".")+5, "")
-        call append(line(".")+6, "\#!/bin/bash")
-
-    else
-	    call setline(1, "/*******************************************************")
-    	call append(line("."), "	> File Name: ".expand("%"))
-    	call append(line(".")+1, "	> Author: Leo")
-	    call append(line(".")+2, "	> Mail: yli97@jmc.com.cn")
-    	call append(line(".")+3, "	> Created Time: ".strftime("%c"))
-    	call append(line(".")+4, " ******************************************************/")
-    	call append(line(".")+5, "")
-    endif
-
-    "如果文件类型为ruby
-    if &filetype == 'ruby'
-        call append(line(".")+6, "#!/usr/bin/env ruby")
-        call append(line(".")+7, "# encoding: utf-8")
-    endif
-
-    " if &filetype == 'mkd'
-        " call append(line(".")+6, "<head><meta charset=\"UTF-8\"></head>")
-    " endif
-
-    "如果文件类型为c
-    if &filetype == 'c'
-	    call append(line(".")+6, "#include<stdio.h>")
-    endif
-
-    if &filetype == 'cpp'
-        if expand("%:e") == 'h'
-            call append(line(".")+6, "#ifndef _".toupper(expand("%:r"))."_H")
-            call append(line(".")+7, "#define _".toupper(expand("%:r"))."_H")
-            call append(line(".")+8, "#endif")
-        else
-            call append(line(".")+6, "#include<iostream>")
-            call append(line(".")+7, "using namespace std;")
-        endif
-    endif
-
-    "如果文件类型为java
-    if &filetype == 'java'
-	    call append(line(".")+6,"public class ".expand("%:r"))
     endif
 
     normal G
@@ -708,14 +668,22 @@ if has("gui_running")
     set noimd
     set t_Co=256
 endif
-set guioptions+=b 
+
 
 
 " theme主题
 set background=dark
 set t_Co=256
 
-colorscheme solarized
+" colorscheme solarized
+colorscheme molokai
+
+highlight Normal ctermbg=none
+" italic for vim:  https://alexpearce.me/2014/05/italics-in-iterm2-vim-tmux/
+" italic for tmux: https://github.com/tmux/tmux/issues/377
+" term or iterm2, use the settings under others/italic
+highlight Comment cterm=italic gui=italic
+highlight search ctermfg=Yellow ctermbg=NONE cterm=bold,underline
 
 
 " 设置标记一列的背景颜色和数字一行颜色一致
@@ -733,5 +701,6 @@ highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
 
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
-au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300

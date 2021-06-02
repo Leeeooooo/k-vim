@@ -5,19 +5,26 @@
 "------------------------------------------- begin of configs --------------------------------------------
 
 " ################### 包依赖 #####################
-" package dependence:  ctags, ag(he_silver_searcher)
-" python dependence:   pep8, pyflake
+" package dependence:  ctags, ag(the_silver_searcher)
+" brew install fzf shellcheck
+" python dependence:   pip install flake8 isort black
 
 " 非兼容vi模式。去掉讨厌的有关vi一致性模式，避免以前版本的一些bug和局限
 set nocompatible
 filetype off " required! turn off
 
+" https://github.com/vim/vim/issues/3117
+if has('python3')
+  silent! python3 1
+endif
+
 " ################### 插件管理 ###################
 
 " inspired by spf13, 自定义需要的插件集合
 if !exists('g:bundle_groups')
+    let g:bundle_groups=['python', 'javascript', 'golang', 'rust', 'shell', 'markdown', 'html', 'css', 'less', 'coffeescript', 'tmux', 'json', 'gtd', 'beta']
     " let g:bundle_groups=['python', 'javascript', 'golang', 'php', 'ruby', 'shell', 'markdown', 'html', 'css', 'less', 'coffeescript', 'tmux', 'json', 'beta']
-    let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta']
+    " let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta']
 endif
 
 " ----------------------------------------------------------------------------
@@ -29,11 +36,9 @@ call plug#begin('~/.vim/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
-" syntastic
-if v:version < 800
-    "Plug 'scrooloose/syntastic'
-else
-    Plug 'w0rp/ale'
+" lint
+if v:version >= 800
+    Plug 'dense-analysis/ale'
 endif
 
 " Group dependencies, vim-snippets depends on ultisnips
@@ -43,9 +48,9 @@ Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
 " auto complete
 " 代码自动补全
-" 迄今为止用到的最好的自动VIM自动补全插件
-" 重启 :YcmRestartServer
-Plug 'Valloric/YouCompleteMe'
+" Use release branch (recommend)
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
 " 自动补全单引号，双引号等
 Plug 'Raimondi/delimitMate'
 " 自动补全html/xml标签
@@ -70,10 +75,11 @@ Plug 'junegunn/vim-easy-align'
 " easymotion
 "更高效的移动 [,, + w/fx/h/j/k/l]
 " Plug 'Lokaltog/vim-easymotion'
+Plug 'easymotion/vim-easymotion'
 
 " 更高效的行内移动, f/F/t/T, 才触发
 " quickscope
-" Plug 'unblevable/quick-scope'
+Plug 'unblevable/quick-scope'
 
 Plug 'vim-scripts/matchit.zip'
 " signature
@@ -88,23 +94,21 @@ Plug 'kshenoy/vim-signature'
 " quick selection and edit
 " expandregion
 " 选中区块
-"Plug 'terryma/vim-expand-region'
+Plug 'terryma/vim-expand-region'
 " 多光标选中编辑
 " multiplecursors
-"Plug 'terryma/vim-multiple-cursors'
+Plug 'terryma/vim-multiple-cursors'
 
 " quick locate file or function
 " 文件搜索
-" change to https://github.com/ctrlpvim/ctrlp.vim
-" ctrlp ctrlpfunky
-"Plug 'ctrlpvim/ctrlp.vim' | Plug 'tacahiroy/ctrlp-funky'
-" ctrlsf
-" 类似sublimetext的搜索
-" In CtrlSF window:
-" 回车/o, 打开
-" t       在tab中打开(建议)
-" T - Lkie t but focus CtrlSF window instead of opened new tab.
-" q - Quit CtrlSF window.
+" change to https://github.com/junegunn/fzf.vim
+" brew install fzf
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'tracyone/fzf-funky',{'on': 'FzfFunky'}
+
+
+" ctrlsf 类似sublimetext的搜索, install ag first
 Plug 'dyng/ctrlsf.vim'
 " incsearch
 " Plug 'haya14busa/incsearch.vim'
@@ -114,13 +118,17 @@ Plug 'dyng/ctrlsf.vim'
 
 " quick run
 " quickrun
-"Plug 'thinca/vim-quickrun'
+Plug 'thinca/vim-quickrun'
 
 " git
 " fugitive
 Plug 'tpope/vim-fugitive'
-" gitgutter
-Plug 'airblade/vim-gitgutter'
+" vim-signify
+if has('nvim') || has('patch-8.0.902')
+    Plug 'mhinz/vim-signify'
+else
+    Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+endif
 
 " gundo
 " edit history, 可以查看回到某个历史状态
@@ -139,7 +147,7 @@ Plug 'kien/rainbow_parentheses.vim'
 Plug 'altercation/vim-colors-solarized'
 " molokai
 " 主题 molokai
-" Plug 'tomasr/molokai'
+Plug 'tomasr/molokai'
 
 
 " nav
@@ -155,15 +163,13 @@ Plug 'majutsushi/tagbar'
 Plug 'kana/vim-textobj-user'
 " 增加行文本对象: l   dal yal cil
 Plug 'kana/vim-textobj-line'
-" 增加文件文本对象: e   dae yae cie
-Plug 'kana/vim-textobj-entire'
 " 增加缩进文本对象: i   dai yai cii - 相同缩进属于同一块
 Plug 'kana/vim-textobj-indent'
 
-" ROS插件
-" Plug 'taketwo/vim-ros'
-" GDB插件
-" Plug 'vim-scripts/gdbmgr'
+" 增加文件文本对象: e   dae yae cie
+Plug 'kana/vim-textobj-entire'
+
+Plug 'wellle/targets.vim'
 
 if count(g:bundle_groups, 'tmux')
     " tmux
@@ -184,23 +190,35 @@ endif
 if count(g:bundle_groups, 'golang')
     " 1. vim a.go
     " 2. :GoInstallBinaries
-    " vimgo  https://github.com/fatih/vim-go
-    Plug 'fatih/vim-go', {'for': 'go'}
+    " 3. :GoUpdateBinaries
+    " vimgo  https://github.com/fatih/vim-go-tutorial#quick-setup
+    Plug 'fatih/vim-go' ", {'for': 'go', 'do': ':GoInstallBinaries'}
 endif
 
+if count(g:bundle_groups, 'rust')
+    Plug 'rust-lang/rust.vim'
+endif
 
 if count(g:bundle_groups, 'python')
     " for python.vim syntax highlight
     " pythonsyntax
-    Plug 'hdima/python-syntax'
+    " Plug 'hdima/python-syntax'
+    Plug 'wklken/python-syntax'
     Plug 'hynek/vim-python-pep8-indent'
     Plug 'Glench/Vim-Jinja2-Syntax'
 
     " isort  https://github.com/timothycrosley/isort#readme + https://github.com/fisadev/vim-isort#installation
-    " pip install isort
-    " Plug 'fisadev/vim-isort'
+    Plug 'fisadev/vim-isort'
     " Shift-V 上下选中, ctrl + i 规范化
-    " let g:vim_isort_map = '<C-i>'
+    let g:vim_isort_map = '<C-i>'
+
+    " pip install black
+    " https://black.readthedocs.io/en/stable/editor_integration.html
+    Plug 'psf/black', { 'tag': '19.10b0' }
+    let g:black_linelength=120
+    nnoremap <silent> <Leader>b :Black<CR>
+    " format at save
+    autocmd BufWritePre *.py execute ':Black'
 endif
 
 if count(g:bundle_groups, 'php')
@@ -223,7 +241,6 @@ if count(g:bundle_groups, 'javascript')
     " javascript
     " 注意: syntax这个插件要放前面
     Plug 'othree/yajs.vim' | Plug 'pangloss/vim-javascript'
-    " Plug 'jelera/vim-javascript-syntax' | Plug 'pangloss/vim-javascript'
 
     " TODO: jquery? for, remove or keep
     Plug 'othree/javascript-libraries-syntax.vim'
@@ -261,7 +278,7 @@ endif
 
 if count(g:bundle_groups, 'less')
     " ###### vim.less : less 自动更新##########
-    Plug 'groenewege/vim-less'
+    " Plug 'groenewege/vim-less'
     " autocmd BufWritePost *.less :!lessc % > %:p:r.css
 endif
 
@@ -270,24 +287,38 @@ if count(g:bundle_groups, 'html')
     " Plug 'mattn/emmet-vim'
 endif
 
+if count(g:bundle_groups, 'gtd')
+    Plug 'wakatime/vim-wakatime'
+endif
+
 " this is just for beta version
 if count(g:bundle_groups, 'beta')
     " indent
-    Plug 'nathanaelkane/vim-indent-guides'
+    " Plug 'nathanaelkane/vim-indent-guides'
     " <leader>ig to trigger
-    let g:indent_guides_start_level = 2
-    let g:indent_guides_guide_size = 1
-    let g:indent_guides_auto_colors = 1
-    " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=black
-    " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=black
+    " let g:indent_guides_start_level = 2
+    " let g:indent_guides_guide_size = 1
+    " let g:indent_guides_auto_colors = 1
 
-    " Plug 'robbles/logstash.vim'
-    " Plug 'ryanoasis/vim-devicons'
-    " Plug 'ekalinin/dockerfile.vim'
 
-    " Plug 'ConradIrwin/vim-bracketed-paste'
-    " Plug 'roxma/vim-paste-easy'
+    " Plug 'tenfyzhong/CompleteParameter.vim'
+    " let g:complete_parameter_use_ultisnips_mapping = 1
+    " inoremap <silent><expr> ( complete_parameter#pre_complete("()")
+    " smap <c-l> <Plug>(complete_parameter#goto_next_parameter)
+    " imap <c-l> <Plug>(complete_parameter#goto_next_parameter)
+    " smap <c-h> <Plug>(complete_parameter#goto_previous_parameter)
+    " imap <c-h> <Plug>(complete_parameter#goto_previous_parameter)
 
+    Plug 'ryanoasis/vim-devicons'
+
+    Plug 'robbles/logstash.vim'
+    Plug 'ekalinin/dockerfile.vim'
+
+    " Plug 'yuttie/comfortable-motion.vim'
+    " Plug 'andrewradev/splitjoin.vim'
+    " vue
+    " Plug 'posva/vim-vue'
+    " Plug 'xolox/vim-easytags'
 
 endif
 
@@ -298,96 +329,21 @@ call plug#end()
 
 " ################### 基础 ######################
 
-" syntastic {{{
-if has_key(g:plugs, 'syntastic')
-    " dependence
-    " 1. shellcheck `brew install shellcheck` https://github.com/koalaman/shellcheck
-
-    let g:syntastic_error_symbol='>>'
-    let g:syntastic_warning_symbol='>'
-    let g:syntastic_check_on_open=1
-    let g:syntastic_check_on_wq=0
-    let g:syntastic_enable_highlighting=1
-
-    " checkers
-    " python
-    " pip install flake8
-    let g:syntastic_python_checkers=['flake8', ] " 使用pyflakes,速度比pylint快
-    let g:syntastic_python_flake8_options='--ignore=E501,E225,E124,E712,E116,E131'
-
-    " javascript
-    " let g:syntastic_javascript_checkers = ['jsl', 'jshint']
-    " let g:syntastic_html_checkers=['tidy', 'jshint']
-    " npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard
-    " npm install -g eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
-    let g:syntastic_javascript_checkers = ['eslint']
-
-    " to see error location list
-    let g:syntastic_always_populate_loc_list = 1
-    let g:syntastic_enable_signs = 1
-    let g:syntastic_auto_loc_list = 0
-    let g:syntastic_auto_jump = 0
-    let g:syntastic_loc_list_height = 5
-
-    function! ToggleErrors()
-        let old_last_winnr = winnr('$')
-        lclose
-        if old_last_winnr == winnr('$')
-            " Nothing was closed, open syntastic_error location panel
-            Errors
-        endif
-    endfunction
-    nnoremap <Leader>s :call ToggleErrors()<cr>
-
-    " ,en ,ep to jump between errors
-    function! <SID>LocationPrevious()
-    try
-        lprev
-    catch /^Vim\%((\a\+)\)\=:E553/
-        llast
-    endtry
-    endfunction
-
-    function! <SID>LocationNext()
-    try
-        lnext
-    catch /^Vim\%((\a\+)\)\=:E553/
-        lfirst
-    endtry
-    endfunction
-
-    nnoremap <silent> <Plug>LocationPrevious    :<C-u>exe 'call <SID>LocationPrevious()'<CR>
-    nnoremap <silent> <Plug>LocationNext        :<C-u>exe 'call <SID>LocationNext()'<CR>
-    nmap <silent> <Leader>ep    <Plug>LocationPrevious
-    nmap <silent> <Leader>en    <Plug>LocationNext
-
-    " 修改高亮的背景色, 适应主题
-    highlight SyntasticErrorSign guifg=white guibg=black
-
-    " 禁止插件检查java
-    " thanks to @marsqing, see https://github.com/wklken/k-vim/issues/164
-    let g:syntastic_mode_map = {'mode': 'active', 'passive_filetypes': ['java'] }
-
-    " 关闭syntastic语法检查, 鼠标复制代码时用到, 防止把错误标志给复制了
-    nnoremap <silent> <Leader>ec :SyntasticToggleMode<CR>
-endif
-" }}}
-
-
 " ale {{{
 if has_key(g:plugs, 'ale')
-    " pip install flake8
-    " npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard
-    " npm install -g eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
+    " install the lint yourself
     let g:ale_linters = {
+    \   '*': ['remove_trailing_lines', 'trim_whitespace'],
     \   'python': ['flake8'],
-    \   'javascript': ['eslint'],
+    \   'javascript': ['prettier', 'eslint'],
+    \   'html': [],
+    \   'go': ['gopls', 'golangci-lint'],
     \}
-
+    " E501 -> 120 chars
     let g:ale_python_flake8_options="--ignore=E121,E123,E126,E226,E24,E704,W503 --max-line-length=120"
 
-    let g:ale_sign_error = '✗'
-    let g:ale_sign_warning = '⚡'
+    let g:ale_sign_error = '>>'
+    let g:ale_sign_warning = '>'
 
     let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
     let g:ale_echo_msg_error_str = 'E'
@@ -397,6 +353,7 @@ if has_key(g:plugs, 'ale')
     nmap <silent> <Leader>ep <Plug>(ale_previous_wrap)
     nmap <silent> <Leader>en <Plug>(ale_next_wrap)
 
+    " 关闭语法检查, 鼠标复制代码时用到, 防止把错误标志给复制了
     nnoremap <silent> <Leader>ec :ALEToggle<CR>
 
     " troggle quickfix list
@@ -404,7 +361,7 @@ if has_key(g:plugs, 'ale')
         let old_last_winnr = winnr('$')
         lclose
         if old_last_winnr == winnr('$')
-            " Nothing was closed, open syntastic_error location panel
+            " Nothing was closed, open location panel
             lopen
         endif
     endfunction
@@ -413,130 +370,92 @@ if has_key(g:plugs, 'ale')
     let g:ale_set_highlights = 1
     highlight clear ALEErrorSign
     highlight clear ALEWarningSign
+
+    " support coc.nvim
+    let g:ale_disable_lsp = 1
 endif
 
 " }}}
 
 " ################### 自动补全 ###################
 
-" YouCompleteMe {{{
-    " youcompleteme  默认tab  s-tab 和自动补全冲突
-    " let g:ycm_key_list_select_completion=['<c-n>']
-    " let g:ycm_key_list_select_completion = ['<Down>']
-    " let g:ycm_key_list_previous_completion=['<c-p>']
-    " let g:ycm_key_list_previous_completion = ['<Up>']
-    let g:ycm_complete_in_comments = 0  "在注释输入中也能补全
-    let g:ycm_complete_in_strings = 1   "在字符串输入中也能补全
-    let g:ycm_use_ultisnips_completer = 1 "提示UltiSnips
-    let g:ycm_collect_identifiers_from_comments_and_strings = 1   "注释和字符串中的文字也会被收入补全
-    let g:ycm_collect_identifiers_from_tags_files = 1
-    " 开启语法关键字补全
-    let g:ycm_seed_identifiers_with_syntax = 1
-    " 设置触发标识符补全的最小字符数
-    let g:ycm_min_num_of_chars_for_completion = 2
-    " 设置语义补全的最大候选项数量
-    let g:ycm_max_num_candidates = 5
-    " 设置标识符补全的最大候选项数量
-    let g:ycm_max_num_identifier_candidates = 5
-    " 设置选中
-    let g:ycm_key_list_stop_completion = ['<CR>']
+" coc.nvim {{{
+" TODO: https://github.com/neoclide/coc.nvim#example-vim-configuration
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
 
-    "let g:ycm_seed_identifiers_with_syntax=1   "语言关键字补全, 不过python关键字都很短，所以，需要的自己打开
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-    " 跳转到定义处, 分屏打开
-    let g:ycm_goto_buffer_command = 'horizontal-split'
-    let g:ycm_register_as_syntastic_checker = 0
-    " nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
-    nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-    nnoremap <leader>gd :YcmCompleter GoToDeclaration<CR>
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? coc#_select_confirm() :
+"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
 
-    " 引入，可以补全系统，以及python的第三方包 针对新老版本YCM做了兼容
-    " new version
-    if !empty(glob("~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py"))
-        let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py"
-    endif
-    "关闭每次打开都提示加载conf文件
-    let g:ycm_confirm_extra_conf = 0
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-    " 直接触发自动补全 insert模式下
-    " let g:ycm_key_invoke_completion = '<c-n>'
-    " 黑名单,不启用
-    let g:ycm_filetype_blacklist = {
-        \ 'tagbar' : 1,
-        \ 'gitcommit' : 1,
-        \}
-    " 添加ROS插件支持
-    " let g:ycm_semantic_triggers = {
-    "     \   'roslaunch' : ['="', '$(', '/'],
-    " "    \   'rosmsg,rossrv,rosaction' : ['re!^', '/'],
-    " "    \ }
+" let g:coc_snippet_next = '<tab>'
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Use `K` to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor. <leader>+,
+" to un-Highlight
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" =================== verified here!!!!!!
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+" nmap <silent> [g <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 " }}}
 
-
 " ultisnips {{{
-    let g:UltiSnipsExpandTrigger       = "<tab>"
-    let g:UltiSnipsJumpForwardTrigger  = "<tab>"
-    let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+    " disable the default <tab> for coc.vim
+    let g:UltiSnipsExpandTrigger="<C-X-o>"
     let g:UltiSnipsSnippetDirectories  = ['UltiSnips']
     let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
     " 定义存放代码片段的文件夹 .vim/UltiSnips下，使用自定义和默认的，将会的到全局，有冲突的会提示
     " 进入对应filetype的snippets进行编辑
     map <leader>us :UltiSnipsEdit<CR>
-
-    " ctrl+j/k 进行选择
-    func! g:JInYCM()
-        if pumvisible()
-            return "\<C-n>"
-        else
-            return "\<c-j>"
-        endif
-    endfunction
-
-    func! g:KInYCM()
-        if pumvisible()
-            return "\<C-p>"
-        else
-            return "\<c-k>"
-        endif
-    endfunction
-    inoremap <c-j> <c-r>=g:JInYCM()<cr>
-    au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:KInYCM()<cr>"
-    let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
-
-    function! g:UltiSnips_Complete()
-        call UltiSnips#ExpandSnippet()
-        if g:ulti_expand_res == 0
-            if pumvisible()
-                return "\<C-n>"
-            else
-                call UltiSnips#JumpForwards()
-                if g:ulti_jump_forwards_res == 0
-                    return "\<TAB>"
-                endif
-            endif
-        endif
-    return ""
-    endfunction
-
-    function! g:UltiSnips_Reverse()
-        call UltiSnips#JumpBackwards()
-        if g:ulti_jump_backwards_res == 0
-            return "\<C-P>"
-        endif
-
-        return ""
-    endfunction
-
-
-    if !exists("g:UltiSnipsJumpForwardTrigger")
-        let g:UltiSnipsJumpForwardTrigger = "<tab>"
-    endif
-    if !exists("g:UltiSnipsJumpBackwardTrigger")
-        let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-    endif
-
-    au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
-    au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 " }}}
 
 
@@ -558,6 +477,7 @@ endif
 " nerdcommenter {{{
     let g:NERDSpaceDelims=1
     let g:NERDAltDelims_python = 1
+    let g:NERDDefaultAlign="left"
 " }}}
 
 " trailingwhitespace {{{
@@ -587,6 +507,7 @@ endif
     map <Leader><leader>l <Plug>(easymotion-lineforward)
     " 重复上一次操作, 类似repeat插件, 很强大
     map <Leader><leader>. <Plug>(easymotion-repeat)
+    let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
 " }}}
 
 
@@ -630,41 +551,22 @@ endif
 
 " ################### 功能相关 ###################
 
-" ctrlp ctrlpfunky{{{
-    let g:ctrlp_map = '<leader>p'
-    let g:ctrlp_cmd = 'CtrlP'
-    map <leader>f :CtrlPMRU<CR>
-    let g:ctrlp_custom_ignore = {
-        \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
-        \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
-        \ }
-    let g:ctrlp_working_path_mode=0
-    let g:ctrlp_match_window_bottom=1
-    let g:ctrlp_max_height=15
-    let g:ctrlp_match_window_reversed=0
-    let g:ctrlp_mruf_max=500
-    let g:ctrlp_follow_symlinks=1
-    " 如果安装了ag, 使用ag
-    " if executable('ag')
-    " " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-    " let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-    " " ag is fast enough that CtrlP doesn't need to cache
-    " let g:ctrlp_use_caching = 0
-    " endif
+" fzf fzf-funky {{{
+    nnoremap <Leader>p :Files<CR>
+    nnoremap <leader>f :History<CR>
 
-    " ctrlpfunky
-    " ctrlp插件1 - 不用ctag进行函数快速跳转
-    nnoremap <Leader>fu :CtrlPFunky<Cr>
+    nnoremap <Leader>fu :FzfFunky<Cr>
     " narrow the list down with a word under cursor
-    nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
-    let g:ctrlp_funky_syntax_highlight = 1
-
-    let g:ctrlp_extensions = ['funky']
+    nnoremap <Leader>fU :execute 'FzfFunky ' . expand('<cword>')<Cr>
 " }}}
-
 
 " ctrlsf {{{
     nmap \ <Plug>CtrlSFCwordPath<CR>
+    nnoremap <C-f> :CtrlSF<Space>
+    " " use async in using Vim 8.0+
+    if v:version >= 800
+        let g:ctrlsf_search_mode = 'async'
+    endif
     " let g:ctrlsf_position = 'below'
     " let g:ctrlsf_winsize = '30%'
     let g:ctrlsf_auto_close = 0
@@ -672,16 +574,17 @@ endif
     " Note: cannot use <CR> or <C-m> for open
     " Use : <sapce> or <tab>
     let g:ctrlsf_mapping = {
-        \ "open"  : "<Space>",
-        \ "openb" : "O",
-        \ "tab"   : "t",
-        \ "tabb"  : "T",
-        \ "prevw" : "p",
+        \ "split"  : "<Space>",
+        \ "prevw" : "<C-P>",
         \ "quit"  : "q",
-        \ "next"  : "<C-J>",
-        \ "prev"  : "<C-K>",
-        \ "pquit" : "q",
+        \ "next"  : "n",
+        \ "prev"  : "p",
+        \ "popen"   : "",
+        \ "open"  : "<C-O>",
         \ }
+
+    " ignore those dirs
+    let g:ctrlsf_ignore_dir = ['static/doc', 'assets', 'vendor']
 " }}}
 
 " git.  git操作还是习惯命令行,vim里面处理简单diff编辑操作
@@ -698,15 +601,6 @@ endif
     " <leader>gp maps to :Git push<CR>
 " }}}
 
-" gitgutter {{{
-    " 同git diff,实时展示文件中修改的行
-    " 只是不喜欢除了行号多一列, 默认关闭,gs时打开
-    let g:gitgutter_map_keys = 0
-    let g:gitgutter_enabled = 0
-    let g:gitgutter_highlight_lines = 1
-    nnoremap <leader>gs :GitGutterToggle<CR>
-" }}}
-
 " gundo {{{
     noremap <leader>h :GundoToggle<CR>
 " }}}
@@ -714,12 +608,11 @@ endif
 " ################### 显示增强 ###################
 
 " airline {{{
+    let g:airline_theme="tomorrow"
     if !exists('g:airline_symbols')
         let g:airline_symbols = {}
     endif
-    let g:airline_left_sep = '▶'
     let g:airline_left_alt_sep = '❯'
-    let g:airline_right_sep = '◀'
     let g:airline_right_alt_sep = '❮'
     let g:airline_symbols.linenr = '¶'
     let g:airline_symbols.branch = '⎇'
@@ -770,8 +663,9 @@ endif
 
 " molokai {{{
     " monokai原始背景色
-    let g:molokai_original = 1
-    let g:rehash256 = 1
+    " let g:molokai_original = 1
+    let g:rehash256=1
+    let g:python_highlight_pycharm_monokai=1
 " }}}
 
 " ################### 快速导航 ###################
@@ -785,8 +679,8 @@ endif
     " s/v 分屏打开文件
     let g:NERDTreeMapOpenSplit = 's'
     let g:NERDTreeMapOpenVSplit = 'v'
-    " fix Nerdtree ^G before folder and file names OSX terminal vim
-    let g:NERDTreeNodeDelimiter = "\u00a0"
+    " show bookmarks in nerdtree
+    " let NERDTreeShowBookmarks = 1
 
 
     " nerdtreetabs
@@ -888,17 +782,42 @@ endif
 
 
 " vimgo {{{
-    let g:go_highlight_functions = 1
-    let g:go_highlight_methods = 1
-    let g:go_highlight_structs = 1
-    let g:go_highlight_operators = 1
-    let g:go_highlight_build_constraints = 1
-
-    let g:go_fmt_fail_silently = 1
     " format with goimports instead of gofmt
     let g:go_fmt_command = "goimports"
-    let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-    let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go', 'java'] }
+    let g:go_fmt_fail_silently = 1
+    let g:go_highlight_types = 1
+    let g:go_highlight_fields = 1
+    let g:go_highlight_functions = 1
+    let g:go_highlight_function_calls = 1
+    let g:go_highlight_extra_types = 1
+
+    let g:go_highlight_structs = 1
+    let g:go_highlight_operators = 1
+    let g:go_highlight_methods = 1
+    let g:go_highlight_build_constraints = 1
+    let g:go_highlight_generate_tags = 1
+    " https://github.com/golang/go/wiki/gopls
+    let g:go_def_mode='gopls'
+    let g:go_info_mode='gopls'
+
+    " automatically highlight variable your cursor is on
+    let g:go_auto_sameids = 0
+
+
+    autocmd FileType go nmap <leader>t  <Plug>(go-test)
+    " run :GoBuild or :GoTestCompile based on the go file
+    function! s:build_go_files()
+        let l:file = expand('%')
+        if l:file =~# '^\f\+_test\.go$'
+            call go#test#Test(0, 1)
+        elseif l:file =~# '^\f\+\.go$'
+            call go#cmd#Build(0)
+        endif
+    endfunction
+    autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+    autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+
+    " autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
 " }}}
 
 " markdown {{{
@@ -924,20 +843,6 @@ endif
 " ####### temp #######
 
 " beta {{{
-    " pip install yapf
-    " python code format
-    " format all file
-    autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
-    " format select block
-    autocmd FileType python vnoremap <leader>y :!yapf<Cr>
-
-    " Plug 'posva/vim-vue'
-
-    " Plug 'millermedeiros/vim-esformatter'
-    " will run esformatter after pressing <leader> followed by the 'e' and 's'
-    " keys
-    " nnoremap <silent> <leader>es :Esformatter<CR>
-    " vnoremap <silent> <leader>es :EsformatterVisual<CR>
 
 " }}}
 
