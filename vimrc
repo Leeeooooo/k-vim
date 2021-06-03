@@ -746,8 +746,8 @@ highlight Normal ctermbg=none
 " italic for vim:  https://alexpearce.me/2014/05/italics-in-iterm2-vim-tmux/
 " italic for tmux: https://github.com/tmux/tmux/issues/377
 " term or iterm2, use the settings under others/italic
-highlight Comment cterm=italic gui=italic
-highlight search ctermfg=Yellow ctermbg=NONE cterm=bold,underline
+" highlight Comment cterm=italic gui=italic
+" highlight search ctermfg=Yellow ctermbg=NONE cterm=bold,underline
 
 
 " 设置标记一列的背景颜色和数字一行颜色一致
