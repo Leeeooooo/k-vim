@@ -90,6 +90,7 @@ sudo npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-c
 brew install node
 npm install jshint -g
 npm install jslint -g
+npm i -g bash-language-server
 npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
 ```
 

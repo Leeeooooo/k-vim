@@ -454,7 +454,7 @@ cnoremap <C-e> <End>
 
 " 搜索相关
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
+" map <space> /
 " 进入搜索Use sane regexes"
 nnoremap / /\v
 vnoremap / /\v
@@ -628,7 +628,7 @@ autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,pe
 
 
 " 定义函数AutoSetFileHead，自动插入文件头
-" autocmd BufNewFile *.sh,*.py exec ":call AutoSetFileHead()"
+autocmd BufNewFile *.cc,*.cpp,*.[ch],*.sh,*.rb,*.java,*.py exec ":call AutoSetFileHead()"
 function! AutoSetFileHead()
     if &filetype == 'python'
         "如果文件类型为python
@@ -670,6 +670,12 @@ function! AutoSetFileHead()
     "如果文件类型为c
     if &filetype == 'c'
 	    call append(line(".")+6, "#include<stdio.h>")
+    endif
+
+    "如果文件类型为cc
+    if &filetype == 'cc'
+        call append(line(".")+6, "#include<iostream>")
+        call append(line(".")+7, "using namespace std;")
     endif
 
     if &filetype == 'cpp'
