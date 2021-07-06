@@ -107,6 +107,18 @@ cd k-vim/
 sh -x install.sh
 
 vim coc.nvim 插件安装
+- coc-syntax
+- coc-snippets
+- coc-pairs
+- coc-highlight
+- coc-git
+- coc-emmet
+- coc-yaml
+- coc-vimlsp
+- coc-pyright
+- coc-json
+- coc-cmake
+- coc-clangd
 ```
 
 ------------------------
