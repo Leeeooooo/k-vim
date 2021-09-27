@@ -119,6 +119,8 @@ vim coc.nvim 插件安装
 - coc-json
 - coc-cmake
 - coc-clangd
+- coc-protobuf
+- coc-markdownlint
 ```
 
 ------------------------

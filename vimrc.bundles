@@ -216,6 +216,7 @@ if count(g:bundle_groups, 'python')
 
     " pip install black
     " https://black.readthedocs.io/en/stable/editor_integration.html
+
     Plug 'psf/black', { 'tag': '19.10b0' }
     let g:black_linelength=120
     nnoremap <silent> <Leader>b :Black<CR>
@@ -447,6 +448,7 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gf <C-o>
+map <silent> ge :ALEDetail<CR>
 " }}}
 
 
