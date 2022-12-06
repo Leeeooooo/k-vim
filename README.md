@@ -85,6 +85,7 @@ sudo apt-get install nodejs npm
 sudo npm install -g jslint
 sudo npm install jshint -g
 sudo npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
+sudo npm install -g bash-language-server
 
 # mac
 brew install node

@@ -304,7 +304,8 @@ set wildignore=*.o,*~,*.pyc,*.class
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
 " 回车即选中当前项
-inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
+" 因vim-coc新版注释
+"inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
 
 " In the quickfix window, <CR> is used to jump to the error under the
 " cursor, so undefine the mapping there.
@@ -355,17 +356,17 @@ noremap <F1> <Esc>"
 
 " F2 行号开关，用于鼠标复制代码用
 " 为方便复制，用<F2>开启/关闭行号显示:
-" function! HideNumber()
-"   if(&relativenumber == &number)
-"     set relativenumber! number!
-"   elseif(&number)
-"     set number!
-"   else
-"     set relativenumber!
-"   endif
-"   set number?
-" endfunc
-" nnoremap <F2> :call HideNumber()<CR>
+ function! HideNumber()
+   if(&relativenumber == &number)
+     set relativenumber! number!
+   elseif(&number)
+     set number!
+   else
+     set relativenumber!
+   endif
+   set number?
+ endfunc
+ nnoremap <F2> :call HideNumber()<CR>
 " F3 显示可打印字符开关
 " nnoremap <F3> :set list! list?<CR>
 " F4 换行开关
@@ -624,7 +625,7 @@ fun! <SID>StripTrailingWhitespaces()
     %s/\s\+$//e
     call cursor(l, c)
 endfun
-autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+autocmd FileType sh,c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 
 
 " 定义函数AutoSetFileHead，自动插入文件头
@@ -638,14 +639,14 @@ function! AutoSetFileHead()
 
     elseif &filetype == 'sh'
         "如果文件类型为sh
-        call setline(1,"\#####################################################")
-        call append(line("."), "\# File Name: ".expand("%"))
-        call append(line(".")+1, "\# Author: Leo")
-        call append(line(".")+2, "\# mail: yli97@jmc.com.cn")
-        call append(line(".")+3, "\# Created Time: ".strftime("%c"))
-        call append(line(".")+4, "\#####################################################")
-        call append(line(".")+5, "")
-        call append(line(".")+6, "\#!/bin/bash")
+        call setline(1,"\#!/bin/bash")
+        call append(line("."), "\#####################################################")
+        call append(line(".")+1, "\# File Name: ".expand("%"))
+        call append(line(".")+2, "\# Author: Leo")
+        call append(line(".")+3, "\# mail: yli97@jmc.com.cn")
+        call append(line(".")+4, "\# Created Time: ".strftime("%c"))
+        call append(line(".")+5, "\#####################################################")
+        call append(line(".")+6, "")
 
     else
 	    call setline(1, "/*******************************************************")
