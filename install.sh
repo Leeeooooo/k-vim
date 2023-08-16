@@ -82,6 +82,13 @@ else
 fi
 export SHELL=$system_shell
 
+# 安装coc.nvim插件
+vim -u $HOME/.vimrc.bundles +"CocInstall coc-syntax coc-snippets coc-pairs coc-highlight \
+                                        coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright \
+                                        coc-json coc-cmake coc-clangd coc-protobuf \
+                                        coc-markdownlint" \
+                            +"CocCommand clangd.install" +qall
+
 #不再使用ycm
 #echo "Step4: compile YouCompleteMe"
 #echo "It will take a long time, just be patient!"

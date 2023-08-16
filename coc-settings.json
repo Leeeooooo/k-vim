@@ -1,5 +1,6 @@
 {
     "diagnostic.displayByAle": true,
+    "colors.enable": true,
     //"suggest.maxCompleteItemCount":8,
     // Enable preselect feature on neovim, default: `true`
     //"suggest.enablePreselect": true,
