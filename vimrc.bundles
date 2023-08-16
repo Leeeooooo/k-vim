@@ -179,15 +179,15 @@ if count(g:bundle_groups, 'tmux')
     Plug 'christoomey/vim-tmux-navigator'
 endif
 
-if count(g:bundle_groups, 'markdown')
-    Plug 'plasticboy/vim-markdown', {'for': 'md'}
-    " https://github.com/suan/vim-instant-markdown
-    " npm -g install instant-markdown-d
-    " Plug 'suan/vim-instant-markdown'
-    " let g:instant_markdown_slow = 1
-    " let g:instant_markdown_autostart = 0
-    " map <F12> :InstantMarkdownPreview<CR>
-endif
+" if count(g:bundle_groups, 'markdown')
+"     Plug 'plasticboy/vim-markdown', {'for': 'md'}
+"     " https://github.com/suan/vim-instant-markdown
+"     " npm -g install instant-markdown-d
+"     " Plug 'suan/vim-instant-markdown'
+"     " let g:instant_markdown_slow = 1
+"     " let g:instant_markdown_autostart = 0
+"     " map <F12> :InstantMarkdownPreview<CR>
+" endif
 
 if count(g:bundle_groups, 'golang')
     " 1. vim a.go
@@ -217,7 +217,7 @@ if count(g:bundle_groups, 'python')
     " pip install black
     " https://black.readthedocs.io/en/stable/editor_integration.html
 
-    Plug 'psf/black', { 'tag': '19.10b0' }
+    Plug 'psf/black', { 'tag': '22.8.0' }
     let g:black_linelength=120
     nnoremap <silent> <Leader>b :Black<CR>
     " format at save

@@ -97,6 +97,16 @@
             "filetypes": ["dockerfile"],
             "args": ["--stdio"]
         }
+        "cmake": {
+          "command": "cmake-language-server",
+          "filetypes": ["cmake"],
+          "rootPatterns": [
+            "build/"
+          ],
+          "initializationOptions": {
+            "buildDirectory": "build"
+          }
+        }
     },
-    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/14.0.0/clangd_14.0.0/bin/clangd"
+    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/16.0.2/clangd_16.0.2/bin/clangd"
 }
