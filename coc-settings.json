@@ -97,7 +97,7 @@
             "command": "docker-langserver",
             "filetypes": ["dockerfile"],
             "args": ["--stdio"]
-        }
+        },
         "cmake": {
           "command": "cmake-language-server",
           "filetypes": ["cmake"],

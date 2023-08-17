@@ -26,7 +26,8 @@ POWERLEVEL9K_USER_ICON='\uF17C'
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(user dir vcs)
 #POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs)
+#POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs)
 POWERLEVEL9K_STATUS_OK=false
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -122,4 +123,6 @@ source $ZSH/oh-my-zsh.sh
 alias vi="vim"
 
 setopt nonomatch
-source /home/yu/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /mnt/data/workspace/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+export PATH="${PATH}:/mnt/data/workspace/diff-so-fancy"
