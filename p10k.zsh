@@ -366,8 +366,12 @@
   typeset -g POWERLEVEL9K_VCS_DIRTY_ICON='\uF056 '                      # 
   typeset -g POWERLEVEL9K_VCS_CONFLICTED_ICON='\uF057 '                 # 
   typeset -g POWERLEVEL9K_VCS_STASH_ICON='\uF01C '                      # 
-  typeset -g POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON='\uF01A '           # 
-  typeset -g POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON='\uF01B '           # 
+  #typeset -g POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON='\uF01A '          # 
+  typeset -g POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON='\uF0AB '           # 
+  typeset -g POWERLEVEL9K_VCS_STATUS_PUSH_COMMITS_BEHIND_ICON='\uF0A8 ' # 
+  #typeset -g POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON='\uF01B '          # 
+  typeset -g POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON='\uF0AA '           # 
+  typeset -g POWERLEVEL9K_VCS_STATUS_PUSH_COMMITS_AHEAD_ICON='\uF0A9 '  # 
   typeset -g POWERLEVEL9K_VCS_TAG_ICON='\uF02B '                        # 
   typeset -g POWERLEVEL9K_VCS_BOOKMARK_ICON='\uF461 '                   # 
   typeset -g POWERLEVEL9K_VCS_COMMIT_ICON='\uE729 '                     # 
@@ -454,10 +458,10 @@
     fi
 
     # ⇠42 if behind the push remote.
-    (( VCS_STATUS_PUSH_COMMITS_BEHIND )) && res+=" ${clean}⇠${VCS_STATUS_PUSH_COMMITS_BEHIND}"
+    (( VCS_STATUS_PUSH_COMMITS_BEHIND )) && res+=" ${clean}${(g::)POWERLEVEL9K_VCS_STATUS_PUSH_COMMITS_BEHIND_ICON}${VCS_STATUS_PUSH_COMMITS_BEHIND}"
     (( VCS_STATUS_PUSH_COMMITS_AHEAD && !VCS_STATUS_PUSH_COMMITS_BEHIND )) && res+=" "
     # ⇢42 if ahead of the push remote; no leading space if also behind: ⇠42⇢42.
-    (( VCS_STATUS_PUSH_COMMITS_AHEAD  )) && res+="${clean}⇢${VCS_STATUS_PUSH_COMMITS_AHEAD}"
+    (( VCS_STATUS_PUSH_COMMITS_AHEAD  )) && res+="${clean}${(g::)POWERLEVEL9K_VCS_STATUS_PUSH_COMMITS_AHEAD_ICON}${VCS_STATUS_PUSH_COMMITS_AHEAD}"
     # *42 if have stashes.
     (( VCS_STATUS_STASHES        )) && res+=" ${clean}${(g::)POWERLEVEL9K_VCS_STASH_ICON}${VCS_STATUS_STASHES}"
     # 'merge' if the repo is in an unusual state.
