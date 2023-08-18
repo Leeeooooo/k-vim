@@ -360,11 +360,11 @@
   typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND=8
 
   # Branch icon. Set this parameter to '\UE0A0 ' for the popular Powerline branch icon.
-  typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON='\uF059 '                   # 
-  typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON='\uF06A '                    # 
-  typeset -g POWERLEVEL9K_VCS_STAGED_ICON='\uF055 '                      # 
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON='\uF059 '                  # 
+  typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON='\uF06A '                   # 
+  typeset -g POWERLEVEL9K_VCS_STAGED_ICON='\uF055 '                     # 
   typeset -g POWERLEVEL9K_VCS_DIRTY_ICON='\uF056 '                      # 
-  typeset -g POWERLEVEL9K_VCS_CONFLICTED_ICON='\uF057 '                      # 
+  typeset -g POWERLEVEL9K_VCS_CONFLICTED_ICON='\uF057 '                 # 
   typeset -g POWERLEVEL9K_VCS_STASH_ICON='\uF01C '                      # 
   typeset -g POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON='\uF01A '           # 
   typeset -g POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON='\uF01B '           # 
