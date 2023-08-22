@@ -118,6 +118,7 @@ export SSH_KEY_PATH="~/.ssh/id_rsa"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vi="vim"
+alias rm="/mnt/data/workspace/scripts/safe_rm.sh"
 
 setopt nonomatch
 source /mnt/data/workspace/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

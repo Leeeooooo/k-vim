@@ -105,7 +105,7 @@ set cursorline
 " 鼠标暂不启用, 键盘党....
 " set mouse-=a
 " 启用鼠标
-" set mouse=a
+set mouse=a
 " Hide the mouse cursor while typing
 " set mousehide
 
@@ -245,12 +245,7 @@ set nrformats=
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
+set signcolumn=yes
 
 " 防止tmux下vim的背景色显示异常
 " Refer: http://sunaku.github.io/vim-256color-bce.html
@@ -306,6 +301,9 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 " 回车即选中当前项
 " 因vim-coc新版注释
 "inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
+
+" 设置预览窗口高度
+set pumheight=12
 
 " In the quickfix window, <CR> is used to jump to the error under the
 " cursor, so undefine the mapping there.
@@ -541,7 +539,7 @@ vnoremap > >gv
 map Y y$
 
 " 复制选中区到系统剪切板中
-" vnoremap <leader>y "+y
+vnoremap <leader>y "+y
 " 选中状态下 Ctrl+c 复制
 vmap <C-c> "+y
 "共享剪贴板

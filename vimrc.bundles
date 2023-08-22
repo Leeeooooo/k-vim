@@ -140,6 +140,7 @@ Plug 'sjl/gundo.vim'
 " 状态栏增强展示
 " Plug 'vim-airline/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
+Plug 'Bakudankun/qline.vim'
 " rainbow_parentheses
 " 括号显示增强
 Plug 'kien/rainbow_parentheses.vim'
@@ -678,18 +679,18 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 " ################### 显示增强 ###################
 
-" airline {{{
-    let g:airline_theme="tomorrow"
-    if !exists('g:airline_symbols')
-        let g:airline_symbols = {}
-    endif
-    let g:airline_left_alt_sep = '❯'
-    let g:airline_right_alt_sep = '❮'
-    let g:airline_symbols.linenr = '¶'
-    let g:airline_symbols.branch = '⎇'
-    " 是否打开tabline
-    " let g:airline#extensions#tabline#enabled = 1
-" }}}
+"  airline {{{
+"    let g:airline_theme="tomorrow"
+"    if !exists('g:airline_symbols')
+"        let g:airline_symbols = {}
+"    endif
+"    let g:airline_left_alt_sep = '❯'
+"    let g:airline_right_alt_sep = '❮'
+"    let g:airline_symbols.linenr = '¶'
+"    let g:airline_symbols.branch = '⎇'
+"    " 是否打开tabline
+"    " let g:airline#extensions#tabline#enabled = 1
+"" }}}
 
 
 
