@@ -11,7 +11,7 @@ ZSH_DISABLE_COMPFIX="true"
 export TERM=xterm-256color
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-# eval `dircolors $HOME/.dir_colors/dircolors`
+# eval `dircolors $HOME/.dircolors`
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -85,6 +85,7 @@ plugins=(
   extract
   zsh-autosuggestions
   zsh-syntax-highlighting
+  tmux
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -122,6 +123,7 @@ alias rm="/mnt/data/workspace/scripts/safe_rm.sh"
 
 setopt nonomatch
 source /mnt/data/workspace/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 export PATH="${PATH}:/mnt/data/workspace/diff-so-fancy"
 

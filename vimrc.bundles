@@ -138,9 +138,9 @@ Plug 'sjl/gundo.vim'
 " view
 " airline
 " 状态栏增强展示
-" Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
-Plug 'Bakudankun/qline.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+" Plug 'Bakudankun/qline.vim'
 " rainbow_parentheses
 " 括号显示增强
 Plug 'kien/rainbow_parentheses.vim'
@@ -680,17 +680,22 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " ################### 显示增强 ###################
 
 "  airline {{{
-"    let g:airline_theme="tomorrow"
-"    if !exists('g:airline_symbols')
-"        let g:airline_symbols = {}
-"    endif
-"    let g:airline_left_alt_sep = '❯'
-"    let g:airline_right_alt_sep = '❮'
-"    let g:airline_symbols.linenr = '¶'
-"    let g:airline_symbols.branch = '⎇'
-"    " 是否打开tabline
-"    " let g:airline#extensions#tabline#enabled = 1
-"" }}}
+    let g:airline_theme="onedark"
+    "安装字体后设置此项
+    let g:airline_powerline_fonts = 1
+    if !exists('g:airline_symbols')
+        let g:airline_symbols = {}
+    endif
+    " 关闭状态显示空白符号计数
+    " let g:airline#extensions#whitespace#enabled = 0
+    " let g:airline#extensions#whitespace#symbol = '!'
+    " let g:airline_left_alt_sep = '❯'
+    " let g:airline_right_alt_sep = '❮'
+    " let g:airline_symbols.linenr = '¶'
+    " let g:airline_symbols.branch = '⎇'
+    " 是否打开tabline
+    " let g:airline#extensions#tabline#enabled = 1
+" }}}
 
 
 
@@ -924,7 +929,6 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 " css {{{
 " }}}
-
 
 " ####### temp #######
 
