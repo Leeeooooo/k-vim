@@ -155,7 +155,7 @@ set incsearch
 " 搜索时忽略大小写
 set ignorecase
 " 有一个或以上大写字母时仍大小写敏感
-set smartcase
+" set smartcase
 
 " 代码折叠
 set foldenable

@@ -6,7 +6,7 @@
 
 " ################### 包依赖 #####################
 " package dependence:  ctags, ag(the_silver_searcher)
-" brew install fzf shellcheck
+" brew install ag fzf black flake8 node pyright
 " python dependence:   pip install flake8 isort black
 
 " 非兼容vi模式。去掉讨厌的有关vi一致性模式，避免以前版本的一些bug和局限
@@ -94,7 +94,6 @@ Plug 'terryma/vim-multiple-cursors'
 " quick locate file or function
 " 文件搜索
 " change to https://github.com/junegunn/fzf.vim
-" brew install fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'tracyone/fzf-funky',{'on': 'FzfFunky'}
@@ -304,6 +303,8 @@ if count(g:bundle_groups, 'json')
     " json
     Plug 'elzr/vim-json', {'for': 'json'}
     let g:vim_json_syntax_conceal = 0
+
+    Plug 'neoclide/jsonc.vim'
 endif
 
 if count(g:bundle_groups, 'css')

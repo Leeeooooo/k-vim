@@ -83,26 +83,11 @@ fi
 export SHELL=$system_shell
 
 # 安装coc.nvim插件
-vim -u $HOME/.vimrc.bundles +"CocInstall coc-syntax coc-snippets coc-pairs coc-highlight \
-                                        coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright \
-                                        coc-json coc-cmake coc-clangd coc-protobuf \
-                                        coc-markdownlint" \
-                            +"CocCommand clangd.install" +qall
+# 由于 CocInstall 命令是异步的，所以等待安装完成后手动退出
+if $FOR_VIM; then
+    vim -u $HOME/.vimrc.bundles +'CocInstall coc-syntax coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh'
+else
+    nvim -u $HOME/.vimrc.bundles +'CocInstall coc-syntax coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh'
+fi
 
-#不再使用ycm
-#echo "Step4: compile YouCompleteMe"
-#echo "It will take a long time, just be patient!"
-#echo "If error,you need to compile it yourself"
-#echo "cd $CURRENT_DIR/bundle/YouCompleteMe/ && python install.py --clang-completer"
-#cd $CURRENT_DIR/bundle/YouCompleteMe/
-#git submodule update --init --recursive
-#if [ `which clang` ]   # check system clang
-#then
-#    python install.py --clang-completer --system-libclang   # use system clang
-#    # for golang
-#    # python install.py --clang-completer --system-libclang --go-completer
-#else
-#    python install.py --clang-completer
-#fi
-
-echo "Install Done!"
+# echo "Install Done!"
