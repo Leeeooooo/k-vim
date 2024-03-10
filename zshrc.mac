@@ -119,7 +119,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vi="vim"
-# alias rm="/mnt/data/workspace/scripts/safe_rm.sh"
+alias rm="/Users/leo/.oh-my-zsh/custom/plugins/k-vim/safe_rm.sh"
 
 setopt nonomatch
 source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
