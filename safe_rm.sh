@@ -1,77 +1,65 @@
 #!/bin/bash
 # 安全的rm脚本
 
-dir=$(date "+%y_%m_%d")
-dir="/Users/leo/.Trash/$dir"
-#echo $dir
-if [ ! -d $dir ];then
-    mkdir -p $dir
-fi
-
-
-# is_f=false
-is_f=true
-args=""
-
-
-f_remove() {
-    for i in ${args}; do
-        if [ -d "$i" -o -f "$i" -o -L "$i" ];then
-            name=`basename $i`
-            if [ -d "$dir/$name" -o -f "$dir/$name" -o -L "$dir/$name" ];then
-                new_name="$dir/${name}_$(date '+%T')"
-                mv $i $new_name && echo "$i deleted,you can see in $new_name"
-            else
-                mv $i $dir && echo "$i deleted,you can see in $dir/$i"
-            fi
-        else
-            echo "参数错误"
-        fi
-    done
+# 创建今日的备份目录
+create_backup_dir() {
+    local dir="/Users/leo/.Trash/$(date "+%Y_%m_%d")"
+    if [ ! -d "$dir" ]; then
+        mkdir -p "$dir"
+    fi
+    echo "$dir"
 }
 
+# 标记是否需要用户确认删除，默认为不需要确认
+is_f=true
+# 文件名参数数组
+declare -a args
 
-remove() {
-    for j in ${args}; do
-        if [ -d "$j" -o -f "$j" -o -L "$j" ];then
-            name=`basename $j`
-            echo "Remove $name?[y/n]"
-            read -s -n1 bool
-            if [[ $bool == [Yy] ]];then
-                if [ -d "$dir/$name" -o -f "$dir/$name" -o -L "$dir/$name" ];then
-                    new_name="$dir/${name}_$(date '+%T')"
-                    mv $j $new_name && echo "$j deleted,you can see in $new_name"
-                else
-                    mv $j $dir && echo "$j deleted,you can see in $dir/$j"
+# 删除或移动到备份目录的函数
+manage_files() {
+    local backup_dir=$(create_backup_dir)
+    for i in "${args[@]}"; do
+        if [ -e "$i" ] || [ -L "$i" ]; then
+            local name=$(basename -- "$i")
+            local new_name="${name}_$(date '+%H-%M-%S')"
+
+            # 如果备份目录中已存在同名文件，则添加随机数以避免冲突
+            if [ -e "$backup_dir/$new_name" ] || [ -L "$backup_dir/$new_name" ]; then
+                new_name="${new_name}_$RANDOM"
+            fi
+
+            # 如果需要确认，提示用户是否删除
+            if [[ $is_f == false ]]; then
+                echo "Remove $name?[y/n]"
+                read -s -n1 bool
+                echo # 输出一个新行
+                if [[ $bool != [Yy] ]]; then
+                    continue # 如果用户选择不删除，跳过当前文件
                 fi
             fi
+
+            mv -- "$i" "$backup_dir/$new_name" && echo "Moved to Trash: $backup_dir/$new_name"
         else
-            echo "参数错误"
+            echo "参数错误: 文件 '$i' 不存在或无法访问."
         fi
     done
 }
 
-
+# 解析命令行参数
 while [ "$1" ]; do
     case "$1" in
         -fr|-rf|-f)
             is_f=true
-            shift
-            ;;
+            shift ;;
         -i|-r)
             is_f=false
-            shift
-            ;;
+            shift ;;
         *)
-            args="$1 $args"
-            shift
-            ;;
+            args+=("$1")
+            shift ;;
     esac
 done
 
+# 处理文件删除或移动
+manage_files
 
-if [[ $is_f  = true ]]; then
-    f_remove
-else
-    remove
-fi
