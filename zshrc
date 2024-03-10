@@ -131,3 +131,5 @@ export PATH="${PATH}:/mnt/data/workspace/diff-so-fancy"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 POWERLEVEL9K_VCS_GIT_ICON=''
 POWERLEVEL9K_VCS_GIT_GITHUB_ICON=''
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
