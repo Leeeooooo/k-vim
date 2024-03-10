@@ -75,20 +75,6 @@ set nobackup
 " 关闭交换文件
 set noswapfile
 
-
-" TODO: remove this, use gundo
-" create undo file
-" if has('persistent_undo')
-  " " How many undos
-  " set undolevels=1000
-  " " number of lines to save for undo
-  " set undoreload=10000
-  " " So is persistent undo ...
-  " "set undofile
-  " set noundofile
-  " " set undodir=/tmp/vimundo/
-" endif
-
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
 " 突出显示当前列
@@ -96,11 +82,9 @@ set cursorcolumn
 " 突出显示当前行
 set cursorline
 
-
 " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉
 " 好处：误删什么的，如果以前屏幕打开，可以找回
 " set t_ti= t_te=
-
 
 " 鼠标暂不启用, 键盘党....
 " set mouse-=a
@@ -108,7 +92,6 @@ set cursorline
 set mouse=a
 " Hide the mouse cursor while typing
 " set mousehide
-
 
 " 修复ctrl+m 多光标操作选择的bug，但是改变了ctrl+v进行字符选中时将包含光标下的字符
 " set selection=inclusive

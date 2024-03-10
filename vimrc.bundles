@@ -13,18 +13,12 @@
 set nocompatible
 filetype off " required! turn off
 
-" https://github.com/vim/vim/issues/3117
-if has('python3')
-  silent! python3 1
-endif
-
 " ################### 插件管理 ###################
 
-" inspired by spf13, 自定义需要的插件集合
+" 自定义需要的插件集合
 if !exists('g:bundle_groups')
-    let g:bundle_groups=['python', 'javascript', 'golang', 'rust', 'shell', 'markdown', 'html', 'css', 'less', 'coffeescript', 'tmux', 'json', 'gtd', 'beta']
-    " let g:bundle_groups=['python', 'javascript', 'golang', 'php', 'ruby', 'shell', 'markdown', 'html', 'css', 'less', 'coffeescript', 'tmux', 'json', 'beta']
-    " let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta']
+    let g:bundle_groups=['python', 'tmux', 'json']
+    " let g:bundle_groups=['tmux', 'markdown', 'golang', 'rust', 'python', 'php', 'ruby', 'javascript', 'coffeescript', 'shell', 'json', 'css', 'less', 'html', 'gtd']
 endif
 
 " ----------------------------------------------------------------------------
@@ -37,9 +31,7 @@ call plug#begin('~/.vim/bundle')
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
 " lint
- if v:version >= 800
-     Plug 'dense-analysis/ale'
- endif
+Plug 'dense-analysis/ale'
 
 " Group dependencies, vim-snippets depends on ultisnips
 " 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
@@ -75,8 +67,7 @@ Plug 'junegunn/vim-easy-align'
 " quick movement
 " easymotion
 "更高效的移动 [,, + w/fx/h/j/k/l]
-" Plug 'Lokaltog/vim-easymotion'
-" Plug 'easymotion/vim-easymotion'
+Plug 'easymotion/vim-easymotion'
 
 " 更高效的行内移动, f/F/t/T, 才触发
 " quickscope
@@ -95,18 +86,18 @@ Plug 'kshenoy/vim-signature'
 " quick selection and edit
 " expandregion
 " 选中区块
-" Plug 'terryma/vim-expand-region'
+Plug 'terryma/vim-expand-region'
 " 多光标选中编辑
 " multiplecursors
-" Plug 'terryma/vim-multiple-cursors'
+Plug 'terryma/vim-multiple-cursors'
 
 " quick locate file or function
 " 文件搜索
 " change to https://github.com/junegunn/fzf.vim
 " brew install fzf
-" Plug '/usr/local/opt/fzf'
-" Plug 'junegunn/fzf.vim'
-" Plug 'tracyone/fzf-funky',{'on': 'FzfFunky'}
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'tracyone/fzf-funky',{'on': 'FzfFunky'}
 
 
 " ctrlsf 类似sublimetext的搜索, install ag first
@@ -157,7 +148,7 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'preservim/nerdtree' | Plug 'jistr/vim-nerdtree-tabs'
 " Plug 'Xuyuanp/nerdtree-git-plugin'
 " ctrlspace
-" Plug 'vim-ctrlspace/vim-ctrlspace'
+Plug 'vim-ctrlspace/vim-ctrlspace'
 " tagbar
 Plug 'majutsushi/tagbar'
 
@@ -180,15 +171,16 @@ if count(g:bundle_groups, 'tmux')
     Plug 'christoomey/vim-tmux-navigator'
 endif
 
-" if count(g:bundle_groups, 'markdown')
-"     Plug 'plasticboy/vim-markdown', {'for': 'md'}
-"     " https://github.com/suan/vim-instant-markdown
-"     " npm -g install instant-markdown-d
-"     " Plug 'suan/vim-instant-markdown'
-"     " let g:instant_markdown_slow = 1
-"     " let g:instant_markdown_autostart = 0
-"     " map <F12> :InstantMarkdownPreview<CR>
-" endif
+if count(g:bundle_groups, 'markdown')
+    Plug 'plasticboy/vim-markdown', {'for': 'md'}
+    let g:vim_markdown_folding_disabled=1
+    " https://github.com/suan/vim-instant-markdown
+    " npm -g install instant-markdown-d
+    " Plug 'suan/vim-instant-markdown'
+    " let g:instant_markdown_slow = 1
+    " let g:instant_markdown_autostart = 0
+    " map <F12> :InstantMarkdownPreview<CR>
+endif
 
 if count(g:bundle_groups, 'golang')
     " 1. vim a.go
@@ -196,6 +188,44 @@ if count(g:bundle_groups, 'golang')
     " 3. :GoUpdateBinaries
     " vimgo  https://github.com/fatih/vim-go-tutorial#quick-setup
     Plug 'fatih/vim-go' ", {'for': 'go', 'do': ':GoInstallBinaries'}
+
+    " format with goimports instead of gofmt
+    let g:go_fmt_command = "goimports"
+    let g:go_fmt_fail_silently = 1
+    let g:go_highlight_types = 1
+    let g:go_highlight_fields = 1
+    let g:go_highlight_functions = 1
+    let g:go_highlight_function_calls = 1
+    let g:go_highlight_extra_types = 1
+
+    let g:go_highlight_structs = 1
+    let g:go_highlight_operators = 1
+    let g:go_highlight_methods = 1
+    let g:go_highlight_build_constraints = 1
+    let g:go_highlight_generate_tags = 1
+    " https://github.com/golang/go/wiki/gopls
+    let g:go_def_mode='gopls'
+    let g:go_info_mode='gopls'
+
+    " automatically highlight variable your cursor is on
+    let g:go_auto_sameids = 0
+
+
+    autocmd FileType go nmap <leader>t  <Plug>(go-test)
+    " run :GoBuild or :GoTestCompile based on the go file
+    function! s:build_go_files()
+        let l:file = expand('%')
+        if l:file =~# '^\f\+_test\.go$'
+            call go#test#Test(0, 1)
+        elseif l:file =~# '^\f\+\.go$'
+            call go#cmd#Build(0)
+        endif
+    endfunction
+    autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+    autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+
+    " autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
+
 endif
 
 if count(g:bundle_groups, 'rust')
@@ -205,6 +235,7 @@ endif
 if count(g:bundle_groups, 'python')
     " for python.vim syntax highlight
     " pythonsyntax
+    let python_highlight_all = 1
     " Plug 'hdima/python-syntax'
     " Plug 'wklken/python-syntax'
     " Plug 'hynek/vim-python-pep8-indent'
@@ -229,6 +260,7 @@ if count(g:bundle_groups, 'php')
     " piv
     " shift-v可以查看函数手册 / leader-pd生成注释
     Plug 'spf13/PIV'
+    let g:DisableAutoPHPFolding = 1
 endif
 
 if count(g:bundle_groups, 'ruby')
@@ -249,6 +281,9 @@ if count(g:bundle_groups, 'javascript')
     " TODO: jquery? for, remove or keep
     Plug 'othree/javascript-libraries-syntax.vim'
     let g:used_javascript_libs = 'jquery,underscore,backbone'
+    let g:html_indent_inctags = "html,body,head,tbody"
+    let g:html_indent_script1 = "inc"
+    let g:html_indent_style1 = "inc"
 
     " for javascript 自动补全, 配合YCM, 需要安装全局环境的（非nvm中) node.js&npm
     " 安装完成后还需要在 bundle/tern_for_vim 下执行 npm install 安装依赖 `cd ~/.vim/bundle/tern_for_vim && npm install`
@@ -261,19 +296,20 @@ if count(g:bundle_groups, 'coffeescript')
     Plug 'kchmck/vim-coffee-script'
 endif
 
-" if count(g:bundle_groups, 'shell')
-    " Plug 'Shougo/vimshell.vim'
-" endif
+if count(g:bundle_groups, 'shell')
+    Plug 'Shougo/vimshell.vim'
+endif
 
 if count(g:bundle_groups, 'json')
     " json
     Plug 'elzr/vim-json', {'for': 'json'}
+    let g:vim_json_syntax_conceal = 0
 endif
 
 if count(g:bundle_groups, 'css')
     " css
     " not work in iterm2 which termianl selection is not xterm-256, and it slow
-    " Plug 'ap/vim-css-color'
+    Plug 'ap/vim-css-color'
 
     " 这个有坑, see issue https://github.com/wklken/k-vim/issues/49
     " Plug 'gorodinskiy/vim-coloresque'
@@ -281,51 +317,19 @@ if count(g:bundle_groups, 'css')
 endif
 
 if count(g:bundle_groups, 'less')
-    " ###### vim.less : less 自动更新##########
-    " Plug 'groenewege/vim-less'
-    " autocmd BufWritePost *.less :!lessc % > %:p:r.css
+  " ###### vim.less : less 自动更新##########
+  Plug 'groenewege/vim-less'
+  autocmd BufWritePost *.less :!lessc % > %:p:r.css
 endif
 
 if count(g:bundle_groups, 'html')
-    " ###### emmet HTML complete #########
-    " Plug 'mattn/emmet-vim'
+  " ###### emmet HTML complete #########
+  Plug 'mattn/emmet-vim'
 endif
 
 if count(g:bundle_groups, 'gtd')
     Plug 'wakatime/vim-wakatime'
 endif
-
-" this is just for beta version
-if count(g:bundle_groups, 'beta')
-    " indent
-    " Plug 'nathanaelkane/vim-indent-guides'
-    " <leader>ig to trigger
-    " let g:indent_guides_start_level = 2
-    " let g:indent_guides_guide_size = 1
-    " let g:indent_guides_auto_colors = 1
-
-
-    " Plug 'tenfyzhong/CompleteParameter.vim'
-    " let g:complete_parameter_use_ultisnips_mapping = 1
-    " inoremap <silent><expr> ( complete_parameter#pre_complete("()")
-    " smap <c-l> <Plug>(complete_parameter#goto_next_parameter)
-    " imap <c-l> <Plug>(complete_parameter#goto_next_parameter)
-    " smap <c-h> <Plug>(complete_parameter#goto_previous_parameter)
-    " imap <c-h> <Plug>(complete_parameter#goto_previous_parameter)
-
-    " Plug 'ryanoasis/vim-devicons'
-
-    Plug 'robbles/logstash.vim'
-    Plug 'ekalinin/dockerfile.vim'
-
-    " Plug 'yuttie/comfortable-motion.vim'
-    " Plug 'andrewradev/splitjoin.vim'
-    " vue
-    " Plug 'posva/vim-vue'
-    " Plug 'xolox/vim-easytags'
-
-endif
-
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -385,23 +389,28 @@ endif
 " ################### 自动补全 ###################
 
 " coc.nvim {{{
-" Some servers have issues with backup files, see #649.
+" https://raw.githubusercontent.com/neoclide/coc.nvim/master/coc-example-config.vim
+
+" May need for Vim (not Neovim) since coc.nvim calculates byte offset by count
+" utf-8 byte sequence
+set encoding=utf-8
+" Some servers have issues with backup files, see #649
 set nobackup
 set nowritebackup
 
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
+" Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
+" delays and poor user experience
 set updatetime=300
 
 " Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
+" diagnostics appear/become resolved
 set signcolumn=yes
 
-" Use tab for trigger completion with characters ahead and navigate.
+" Use tab for trigger completion with characters ahead and navigate
 " NOTE: There's always complete item selected by default, you may want to enable
-" no select by `"suggest.noselect": true` in your configuration file.
+" no select by `"suggest.noselect": true` in your configuration file
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
+" other plugin before putting this into your config
 inoremap <silent><expr> <TAB>
       \ coc#pum#visible() ? coc#pum#next(1) :
       \ CheckBackspace() ? "\<Tab>" :
@@ -409,7 +418,7 @@ inoremap <silent><expr> <TAB>
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 " Make <CR> to accept selected completion item or notify coc.nvim to format
-" <C-g>u breaks current undo, please make your own choice.
+" <C-g>u breaks current undo, please make your own choice
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
@@ -418,11 +427,7 @@ function! CheckBackspace() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-"add here
-let g:coc_snippet_next = '<S-tab>'
-let g:coc_snippet_prev = '<C-tab>'
-
-" Use <c-space> to trigger completion.
+" Use <c-space> to trigger completion
 if has('nvim')
   inoremap <silent><expr> <c-space> coc#refresh()
 else
@@ -430,20 +435,18 @@ else
 endif
 
 " Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-" GoTo code navigation.
+" GoTo code navigation
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gf <C-o>
-map <silent> ge :ALEDetail<CR>
 
-
-" Use K to show documentation in preview window.
+" Use K to show documentation in preview window
 nnoremap <silent> K :call ShowDocumentation()<CR>
 
 function! ShowDocumentation()
@@ -454,39 +457,46 @@ function! ShowDocumentation()
   endif
 endfunction
 
-" Highlight the symbol and its references when holding the cursor.
+" Highlight the symbol and its references when holding the cursor
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Symbol renaming.
+" Symbol renaming
 nmap <leader>rn <Plug>(coc-rename)
 
-" Formatting selected code.
+" Formatting selected code
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
-  " Setup formatexpr specified filetype(s).
+  " Setup formatexpr specified filetype(s)
   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
+  " Update signature help on jump placeholder
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" Applying codeAction to the selected region.
+" Applying code actions to the selected code block
 " Example: `<leader>aap` for current paragraph
 xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
 
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
+" Remap keys for applying code actions at the cursor position
+nmap <leader>ac  <Plug>(coc-codeaction-cursor)
+" Remap keys for apply code actions affect whole buffer
+nmap <leader>as  <Plug>(coc-codeaction-source)
+" Apply the most preferred quickfix action to fix diagnostic on the current line
 nmap <leader>qf  <Plug>(coc-fix-current)
 
-" Run the Code Lens action on the current line.
+" Remap keys for applying refactor code actions
+nmap <silent> <leader>re <Plug>(coc-codeaction-refactor)
+xmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
+nmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
+
+" Run the Code Lens action on the current line
 nmap <leader>cl  <Plug>(coc-codelens-action)
 
 " Map function and class text objects
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server
 xmap if <Plug>(coc-funcobj-i)
 omap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)
@@ -496,7 +506,7 @@ omap ic <Plug>(coc-classobj-i)
 xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)
 
-" Remap <C-f> and <C-b> for scroll float windows/popups.
+" Remap <C-f> and <C-b> to scroll float windows/popups
 if has('nvim-0.4.0') || has('patch-8.2.0750')
   nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
   nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
@@ -506,41 +516,41 @@ if has('nvim-0.4.0') || has('patch-8.2.0750')
   vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
 
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of language server.
+" Use CTRL-S for selections ranges
+" Requires 'textDocument/selectionRange' support of language server
 nmap <silent> <C-s> <Plug>(coc-range-select)
 xmap <silent> <C-s> <Plug>(coc-range-select)
 
-" Add `:Format` command to format current buffer.
+" Add `:Format` command to format current buffer
 command! -nargs=0 Format :call CocActionAsync('format')
 
-" Add `:Fold` command to fold current buffer.
+" Add `:Fold` command to fold current buffer
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
-" Add `:OR` command for organize imports of the current buffer.
+" Add `:OR` command for organize imports of the current buffer
 command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
 
-" Add (Neo)Vim's native statusline support.
+" Add (Neo)Vim's native statusline support
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
+" provide custom statusline: lightline.vim, vim-airline
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
-" Show all diagnostics.
+" Show all diagnostics
 nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
+" Manage extensions
 nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
+" Show commands
 nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
+" Find symbol of current document
 nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
+" Search workspace symbols
 nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
+" Do default action for next item
 nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
+" Do default action for previous item
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
+" Resume latest coc list
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " }}}
 
@@ -583,14 +593,14 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " }}}
 
 
-" quickscope {{{
-    let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-    " macvim/gvim会有问题, 暂时注解
-    " let g:qs_first_occurrence_highlight_color = '#afff5f' " gui vim
-    " let g:qs_first_occurrence_highlight_color = 155       " terminal vim
-    " let g:qs_second_occurrence_highlight_color = '#5fffff'  " gui vim
-    " let g:qs_second_occurrence_highlight_color = 81         " terminal vim
-" }}}
+"" quickscope {{{
+"    let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+"    " macvim/gvim会有问题, 暂时注解
+"    let g:qs_first_occurrence_highlight_color = '#afff5f' " gui vim
+"    let g:qs_first_occurrence_highlight_color = 155       " terminal vim
+"    let g:qs_second_occurrence_highlight_color = '#5fffff'  " gui vim
+"    let g:qs_second_occurrence_highlight_color = 81         " terminal vim
+"" }}}
 
 " ################### 快速选中 ###################
 
@@ -665,7 +675,7 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
     " :Gdiff  :Gstatus :Gvsplit
     nnoremap <leader>ge :Gdiff<CR>
     " not ready to open
-    " <leader>gb maps to :Gblame<CR>
+    nnoremap <leader>gb :Git blame<CR>
     " <leader>gs maps to :Gstatus<CR>
     " <leader>gd maps to :Gdiff<CR>  和现有冲突
     " <leader>gl maps to :Glog<CR>
@@ -850,90 +860,19 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 " ################### 语言相关 ###################
 
-" quickrun {{{
-    let g:quickrun_config = {
-    \   "_" : {
-    \       "outputter" : "message",
-    \   },
-    \}
-
-    let g:quickrun_no_default_key_mappings = 1
-    nmap <Leader>r <Plug>(quickrun)
-    map <F10> :QuickRun<CR>
-" }}}
-
-
-" pythonsyntax {{{
-    let python_highlight_all = 1
-" }}}
-
-" piv {{{
-    let g:DisableAutoPHPFolding = 1
-" }}}
-
-
-" vimgo {{{
-    " format with goimports instead of gofmt
-    let g:go_fmt_command = "goimports"
-    let g:go_fmt_fail_silently = 1
-    let g:go_highlight_types = 1
-    let g:go_highlight_fields = 1
-    let g:go_highlight_functions = 1
-    let g:go_highlight_function_calls = 1
-    let g:go_highlight_extra_types = 1
-
-    let g:go_highlight_structs = 1
-    let g:go_highlight_operators = 1
-    let g:go_highlight_methods = 1
-    let g:go_highlight_build_constraints = 1
-    let g:go_highlight_generate_tags = 1
-    " https://github.com/golang/go/wiki/gopls
-    let g:go_def_mode='gopls'
-    let g:go_info_mode='gopls'
-
-    " automatically highlight variable your cursor is on
-    let g:go_auto_sameids = 0
-
-
-    autocmd FileType go nmap <leader>t  <Plug>(go-test)
-    " run :GoBuild or :GoTestCompile based on the go file
-    function! s:build_go_files()
-        let l:file = expand('%')
-        if l:file =~# '^\f\+_test\.go$'
-            call go#test#Test(0, 1)
-        elseif l:file =~# '^\f\+\.go$'
-            call go#cmd#Build(0)
-        endif
-    endfunction
-    autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-    autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
-
-    " autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
-" }}}
-
-" markdown {{{
-    let g:vim_markdown_folding_disabled=1
-" }}}
-
-
-" javascript {{{
-    " pangloss/vim-javascript
-    let g:html_indent_inctags = "html,body,head,tbody"
-    let g:html_indent_script1 = "inc"
-    let g:html_indent_style1 = "inc"
-" }}}
-
-" json {{{
-    let g:vim_json_syntax_conceal = 0
-" }}}
-
-" css {{{
-" }}}
+"" quickrun {{{
+"    let g:quickrun_config = {
+"    \   "_" : {
+"    \       "outputter" : "message",
+"    \   },
+"    \}
+"
+"    let g:quickrun_no_default_key_mappings = 1
+"    nmap <Leader>r <Plug>(quickrun)
+"    map <F10> :QuickRun<CR>
+"" }}}
 
 " ####### temp #######
 
-" beta {{{
-
-" }}}
 
 "------------------------------------------- end of configs --------------------------------------------
