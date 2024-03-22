@@ -119,7 +119,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vi="vim"
-alias rm="/Users/leo/.oh-my-zsh/custom/plugins/k-vim/safe_rm.sh"
+alias rm="$ZSH/custom/plugins/k-vim/safe_rm_mac.sh"
 
 setopt nonomatch
 source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -128,7 +128,7 @@ source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 source "/opt/homebrew/opt/fzf/shell/completion.zsh"
 
-# export PATH="${PATH}:/mnt/data/workspace/diff-so-fancy"
+export PATH="${PATH}:$ZSH/custom/plugins/diff-so-fancy"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

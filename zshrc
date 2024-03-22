@@ -9,9 +9,9 @@ ZSH_DISABLE_COMPFIX="true"
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 export TERM=xterm-256color
+# eval `dircolors $HOME/.dircolors`
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-# eval `dircolors $HOME/.dircolors`
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -119,13 +119,13 @@ export SSH_KEY_PATH="~/.ssh/id_rsa"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vi="vim"
-alias rm="/mnt/data/workspace/scripts/safe_rm.sh"
+alias rm="$ZSH/custom/plugins/k-vim/safe_rm.sh"
 
 setopt nonomatch
-source /mnt/data/workspace/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/doc/fzf/examples/key-bindings.zsh
 
-export PATH="${PATH}:/mnt/data/workspace/diff-so-fancy"
+export PATH="${PATH}:$ZSH/custom/plugins/diff-so-fancy"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
