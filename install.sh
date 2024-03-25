@@ -1,93 +1,125 @@
 #!/bin/bash
 
-# refer  spf13-vim bootstrap.sh`
-BASEDIR=$(dirname $0)
-cd $BASEDIR
-CURRENT_DIR=`pwd`
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" || exit
 
-# parse arguments
-function show_help
-{
-    echo "install.sh [option]
-    --for-vim       Install configuration files for vim, default option
-    --for-neovim    Install configuration files for neovim
-    --for-all       Install configuration files for vim & neovim
-    --help          Show help messages
-For example:
-    install.sh --for-vim
-    install.sh --help"
+# 定义需要操作的文件列表
+declare -a FILES_TO_PROCESS=(
+    ".vim"
+    ".vimrc"
+    ".gvimrc"
+    ".vimrc.bundles"
+)
+
+# 解析参数
+show_help() {
+    cat << EOF
+用法：install.sh [选项]
+    --install       安装vim配置文件，默认选项
+    --update        更新vim插件
+    --help          显示帮助信息
+示例：
+    install.sh --install
+    install.sh --help
+EOF
 }
-FOR_VIM=true
-FOR_NEOVIM=false
-if [ "$1" != "" ]; then
-    case $1 in
-        --for-vim)
-            FOR_VIM=true
-            FOR_NEOVIM=false
-            shift
+
+backup_and_unlink() {
+    local target_dir="$HOME/.config_$(date "+%Y%m%d")"
+    mkdir -p "$target_dir"
+    for i in "${FILES_TO_PROCESS[@]}"; do
+        local source_file="$HOME/$i"
+        local target_file="$target_dir/$i"
+        if [[ -e $source_file && ! -L $source_file ]]; then
+            echo "  备份文件: $source_file => $target_file"
+            mv "$source_file" "$target_file"
+        fi
+        if [[ -h $source_file ]]; then
+            echo "  解除符号链接: $source_file"
+            unlink "$source_file"
+        fi
+    done
+}
+
+create_symlinks() {
+    for i in "${FILES_TO_PROCESS[@]}"; do
+        local source_file="$CURRENT_DIR/$i"
+        local target_file="$HOME/$i"
+        if [[ -e $source_file ]]; then
+            echo "  创建符号链接: $source_file => $target_file"
+            ln -snf "$source_file" "$target_file"
+        else
+            echo "  源文件不存在，跳过: $source_file"
+        fi
+    done
+}
+
+install_dependencies() {
+    # 检测操作系统类型
+    case "$(uname -s)" in
+        Linux*)
+            echo "  当前为 Linux 系统, 使用 apt 安装软件包..."
+            sudo apt update
+            sudo apt install -y fzf nodejs npm silversearcher-ag
+            sudo pip3 install black flake8
             ;;
-        --for-neovim)
-            FOR_NEOVIM=true
-            FOR_VIM=false
-            shift
+
+        Darwin*)
+            echo "  当前为 macOS 系统, 使用 brew 安装软件包..."
+            brew install black flake8 fzf node the_silver_searcher
             ;;
-        --for-all)
-            FOR_VIM=true
-            FOR_NEOVIM=true
-            shift
+
+        *)
+            echo "  不支持的操作系统."
+            return 1
+            ;;
+    esac
+}
+
+install() {
+    echo "Step1: 备份当前配置"
+    backup_and_unlink
+
+    echo "Step2: 创建配置"
+    create_symlinks
+
+    echo "Step3: 安装前置依赖包"
+    install_dependencies
+
+    echo "Step4: 安装 Vim-plug 及插件"
+    system_shell=$SHELL
+    export SHELL="/bin/sh"
+    vim -u "$HOME/.vimrc.bundles" +PlugInstall! +PlugClean! +qall
+    export SHELL=$system_shell
+
+    echo "Step5: 安装 coc.nvim 插件"
+    vim +'CocInstall -sync coc-syntax coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh' +qall
+
+    echo "安装完毕，请手动运行以下 Vim 命令来安装 clangd 语言服务器："
+    echo "vim tmp.cpp +'CocCommand clangd.install'"
+}
+
+update() {
+    echo "更新 Vim-plug 插件及 coc-nvim 插件"
+    vim +PlugUpgrade +PlugUpdate! +PlugClean! +CocUpdateSync +qall
+
+    echo "更新完毕！"
+}
+
+main() {
+    case "$1" in
+        --help)
+            show_help
+            ;;
+        --install)
+            install
+            ;;
+        --update)
+            update
             ;;
         *)
             show_help
-            exit
             ;;
     esac
-fi
-
-lnif() {
-    if [ -e "$1" ]; then
-        ln -sf "$1" "$2"
-    fi
 }
 
-
-echo "Step1: backing up current vim config"
-today=`date +%Y%m%d`
-if $FOR_VIM; then
-    for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc $HOME/.vimrc.bundles; do [ -e $i ] && [ ! -L $i ] && mv $i $i.$today; done
-    for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc $HOME/.vimrc.bundles; do [ -L $i ] && unlink $i ; done
-fi
-if $FOR_NEOVIM; then
-    for i in $HOME/.config/nvim $HOME/.config/nvim/init.vim; do [ -e $i ] && [ ! -L $i ] && mv $i $i.$today; done
-    for i in $HOME/.config/nvim/init.vim $HOME/.config/nvim; do [ -L $i ] && unlink $i ; done
-fi
-
-echo "Step2: setting up symlinks"
-if $FOR_VIM; then
-    lnif $CURRENT_DIR/vimrc $HOME/.vimrc
-    lnif $CURRENT_DIR/vimrc.bundles $HOME/.vimrc.bundles
-    lnif "$CURRENT_DIR/" "$HOME/.vim"
-fi
-if $FOR_NEOVIM; then
-    lnif "$CURRENT_DIR/" "$HOME/.config/nvim"
-    lnif $CURRENT_DIR/vimrc $CURRENT_DIR/init.vim
-fi
-
-echo "Step3: update/install plugins using Vim-plug"
-system_shell=$SHELL
-export SHELL="/bin/sh"
-if $FOR_VIM; then
-    vim -u $HOME/.vimrc.bundles +PlugInstall! +PlugClean! +qall
-else
-    nvim -u $HOME/.vimrc.bundles +PlugInstall! +PlugClean! +qall
-fi
-export SHELL=$system_shell
-
-# 安装coc.nvim插件
-# 由于 CocInstall 命令是异步的，所以等待安装完成后手动退出
-if $FOR_VIM; then
-    vim -u $HOME/.vimrc.bundles +'CocInstall coc-syntax coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh'
-else
-    nvim -u $HOME/.vimrc.bundles +'CocInstall coc-syntax coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh'
-fi
-
-# echo "Install Done!"
+main $@
