@@ -3,11 +3,13 @@
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" || exit
 
 # 定义需要操作的文件列表
-declare -a FILES_TO_PROCESS=(
-    ".vim"
-    ".vimrc"
-    ".gvimrc"
-    ".vimrc.bundles"
+declare -a FILES_TO_LINK=(
+    "vim"
+    "p10k.zsh"
+    "tmux.conf"
+    "vimrc"
+    "vimrc.bundles"
+    "zshrc"
 )
 
 # 解析参数
@@ -26,8 +28,8 @@ EOF
 backup_and_unlink() {
     local target_dir="$HOME/.config_$(date "+%Y%m%d")"
     mkdir -p "$target_dir"
-    for i in "${FILES_TO_PROCESS[@]}"; do
-        local source_file="$HOME/$i"
+    for i in "${FILES_TO_LINK[@]}"; do
+        local source_file="$HOME/.$i"
         local target_file="$target_dir/$i"
         if [[ -e $source_file && ! -L $source_file ]]; then
             echo "  备份文件: $source_file => $target_file"
@@ -41,9 +43,18 @@ backup_and_unlink() {
 }
 
 create_symlinks() {
-    for i in "${FILES_TO_PROCESS[@]}"; do
+    for i in "${FILES_TO_LINK[@]}"; do
         local source_file="$CURRENT_DIR/$i"
-        local target_file="$HOME/$i"
+        # 如果文件名为 vim，则源文件为 $CURRENT_DIR
+        if [[ "$i" == "vim" ]]; then
+            local source_file="$CURRENT_DIR"
+        # 如果文件名为 zshrc，则根据当前系统判断源文件
+        elif [[ "$i" == "zshrc" ]]; then
+            local source_file="$CURRENT_DIR/zshrc.$(uname -s)"
+        else
+            local source_file="$CURRENT_DIR/$i"
+        fi
+        local target_file="$HOME/.$i"
         if [[ -e $source_file ]]; then
             echo "  创建符号链接: $source_file => $target_file"
             ln -snf "$source_file" "$target_file"
@@ -122,4 +133,4 @@ main() {
     esac
 }
 
-main $@
+main "$@"
