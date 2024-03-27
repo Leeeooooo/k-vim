@@ -69,9 +69,9 @@ install_dependencies() {
     case "$(uname -s)" in
         Linux*)
             echo "  当前为 Linux 系统, 使用 apt 安装软件包..."
-            sudo apt update
-            sudo apt install -y fzf nodejs npm silversearcher-ag
-            sudo pip3 install black flake8
+            sudo apt update -qq
+            sudo apt install -yqq fzf nodejs npm silversearcher-ag
+            sudo pip3 install -q black flake8
             ;;
 
         Darwin*)
@@ -103,7 +103,7 @@ install() {
     export SHELL=$system_shell
 
     echo "Step5: 安装 coc.nvim 插件"
-    vim +'CocInstall -sync coc-syntax coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh' +qall
+    vim -c 'echo "正在安装插件，请稍候..."' +'CocInstall -sync coc-syntax coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh' +qall
 
     echo "安装完毕，请手动运行以下 Vim 命令来安装 clangd 语言服务器："
     echo "vim tmp.cpp +'CocCommand clangd.install'"
