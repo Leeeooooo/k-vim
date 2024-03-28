@@ -86,6 +86,15 @@ install_dependencies() {
     esac
 }
 
+install_plugs() {
+    # system_shell=$SHELL
+    # export SHELL="/bin/sh"
+    vim -u "$HOME/.vimrc.bundles" +PlugInstall! +PlugClean! +qall
+    # export SHELL=$system_shell
+
+    vim -c 'echo "正在安装coc.nvim插件，请稍候..."' +'CocInstall -sync coc-syntax coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh' +qall
+}
+
 install() {
     echo "Step1: 备份当前配置"
     backup_and_unlink
@@ -97,13 +106,7 @@ install() {
     install_dependencies
 
     echo "Step4: 安装 Vim-plug 及插件"
-    system_shell=$SHELL
-    export SHELL="/bin/sh"
-    vim -u "$HOME/.vimrc.bundles" +PlugInstall! +PlugClean! +qall
-    export SHELL=$system_shell
-
-    echo "Step5: 安装 coc.nvim 插件"
-    vim -c 'echo "正在安装插件，请稍候..."' +'CocInstall -sync coc-syntax coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh' +qall
+    install_plugs
 
     echo "安装完毕，请手动运行以下 Vim 命令来安装 clangd 语言服务器："
     echo "vim tmp.cpp +'CocCommand clangd.install'"
