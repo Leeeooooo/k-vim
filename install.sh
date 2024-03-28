@@ -114,7 +114,7 @@ install() {
 
 update() {
     echo "更新 Vim-plug 插件及 coc-nvim 插件"
-    vim +PlugUpgrade +PlugUpdate! +PlugClean! +CocUpdateSync +qall
+    vim +PlugUpgrade +PlugUpdate! +PlugClean! -c 'echo "正在更新coc.nvim插件，请稍候..."' +CocUpdateSync +qall
 
     echo "更新完毕！"
 }
