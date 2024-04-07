@@ -3,7 +3,7 @@
 
 # 创建今日的备份目录
 create_backup_dir() {
-    local dir="/Users/leo/.Trash/$(date "+%Y_%m_%d")"
+    local dir="$HOME/.Trash/$(date "+%Y_%m_%d")"
     if [ ! -d "$dir" ]; then
         mkdir -p "$dir"
     fi
