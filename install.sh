@@ -6,6 +6,7 @@ CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" || exit
 declare -a FILES_TO_LINK=(
     "vim"
     "p10k.zsh"
+    "dircolors"
     "tmux.conf"
     "vimrc"
     "vimrc.bundles"
