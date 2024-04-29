@@ -125,6 +125,7 @@ alias rm="$ZSH/custom/plugins/k-vim/safe_rm.sh"
 setopt nonomatch
 source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/doc/fzf/examples/key-bindings.zsh
+source $ZSH/custom/plugins/forgit/forgit.plugin.zsh
 
 export PATH="${PATH}:$ZSH/custom/plugins/diff-so-fancy"
 
