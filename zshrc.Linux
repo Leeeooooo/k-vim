@@ -128,6 +128,7 @@ source /usr/share/doc/fzf/examples/key-bindings.zsh
 source $ZSH/custom/plugins/forgit/forgit.plugin.zsh
 
 export PATH="${PATH}:$ZSH/custom/plugins/diff-so-fancy"
+export FZF_DEFAULT_OPTS="--layout reverse --preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
