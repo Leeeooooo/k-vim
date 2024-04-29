@@ -87,14 +87,10 @@ plugins=(
   ag
   extract
   git
-  iterm2
   z
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
-
-# enable the integration with zstyle
-zstyle :omz:plugins:iterm2 shell-integration yes
 
 source $ZSH/oh-my-zsh.sh
 
@@ -140,4 +136,4 @@ export PATH="${PATH}:$ZSH/custom/plugins/diff-so-fancy"
 POWERLEVEL9K_VCS_GIT_ICON=''
 POWERLEVEL9K_VCS_GIT_GITHUB_ICON=''
 
-# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
