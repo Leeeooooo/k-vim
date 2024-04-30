@@ -6,7 +6,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # brew completions
-FPATH="/opt/homebrew/share/zsh/site-functions:${FPATH}"
+FPATH="/opt/homebrew/share/zsh-completions:/opt/homebrew/share/zsh/site-functions:${FPATH}"
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -88,8 +88,6 @@ plugins=(
   extract
   git
   z
-  zsh-autosuggestions
-  zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -123,12 +121,12 @@ alias vi="vim"
 alias rm="$ZSH/custom/plugins/k-vim/safe_rm_mac.sh"
 
 setopt nonomatch
-source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
-source "/opt/homebrew/opt/fzf/shell/completion.zsh"
-source $ZSH/custom/plugins/forgit/forgit.plugin.zsh
 
-export PATH="${PATH}:$ZSH/custom/plugins/diff-so-fancy"
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+source /opt/homebrew/opt/fzf/shell/completion.zsh
+source /opt/homebrew/opt/forgit/share/forgit/forgit.plugin.zsh
 export FZF_CTRL_T_OPTS="--layout reverse --preview 'bat --theme=Solarized\ \(dark\) --color=always --style=numbers --line-range=:500 {}'"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
