@@ -321,7 +321,7 @@ endif
 " map <Right> <Nop>
 " map <Up> <Nop>
 " map <Down> <Nop>
-" 
+
 " Treat long lines as break lines (useful when moving around in them)
 " se swap之后，同物理行上线直接跳
 " nnoremap k gk
@@ -631,13 +631,13 @@ function! AutoSetFileHead()
         call append(line(".")+6, "")
 
     else
-	    call setline(1, "/*******************************************************")
-    	call append(line("."), "	> File Name: ".expand("%"))
-    	call append(line(".")+1, "	> Author: Leo")
-	    call append(line(".")+2, "	> Mail: yli97@jmc.com.cn")
-    	call append(line(".")+3, "	> Created Time: ".strftime("%c"))
-    	call append(line(".")+4, " ******************************************************/")
-    	call append(line(".")+5, "")
+        call setline(1, "/*******************************************************")
+        call append(line("."), "	> File Name: ".expand("%"))
+        call append(line(".")+1, "	> Author: Leo")
+        call append(line(".")+2, "	> Mail: yli97@jmc.com.cn")
+        call append(line(".")+3, "	> Created Time: ".strftime("%c"))
+        call append(line(".")+4, " ******************************************************/")
+        call append(line(".")+5, "")
     endif
 
     "如果文件类型为ruby
@@ -652,7 +652,7 @@ function! AutoSetFileHead()
 
     "如果文件类型为c
     if &filetype == 'c'
-	    call append(line(".")+6, "#include<stdio.h>")
+        call append(line(".")+6, "#include<stdio.h>")
     endif
 
     "如果文件类型为cc
@@ -674,8 +674,7 @@ function! AutoSetFileHead()
 
     "如果文件类型为java
     if &filetype == 'java'
-	    call append(line(".")+6,"public class ".expand("%:r"))
-
+        call append(line(".")+6,"public class ".expand("%:r"))
     endif
 
     normal G
