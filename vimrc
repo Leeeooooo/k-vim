@@ -62,8 +62,8 @@ filetype plugin indent on
 
 " 文件修改之后自动载入
 set autoread
-" 启动的时候不显示那个援助乌干达儿童的提示
-set shortmess=atI
+" 启动的时候不显示提示
+" set shortmess=atI
 
 " 备份,到另一个位置. 防止误删, 目前是取消备份
 "set backup
@@ -123,8 +123,8 @@ set whichwrap+=<,>,h,l
 set ruler
 " 在状态栏显示正在输入的命令
 " set showcmd
-" 左下角显示当前vim模式
-set showmode
+" 左下角不显示当前vim模式
+set noshowmode
 
 " 在上下移动光标时，光标的上方或下方至少会保留显示的行数
 set scrolloff=7
@@ -611,7 +611,7 @@ autocmd FileType sh,c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml
 
 
 " 定义函数AutoSetFileHead，自动插入文件头
-autocmd BufNewFile *.cc,*.cpp,*.[ch],*.sh,*.rb,*.java,*.py exec ":call AutoSetFileHead()"
+" autocmd BufNewFile *.cc,*.cpp,*.[ch],*.sh,*.rb,*.java,*.py exec ":call AutoSetFileHead()"
 function! AutoSetFileHead()
     if &filetype == 'python'
         "如果文件类型为python
@@ -730,6 +730,7 @@ set t_Co=256
 
 colorscheme solarized
 
+highlight Visual cterm=none ctermbg=8 ctermfg=0
 highlight Normal ctermbg=none
 " italic for vim:  https://alexpearce.me/2014/05/italics-in-iterm2-vim-tmux/
 " italic for tmux: https://github.com/tmux/tmux/issues/377
