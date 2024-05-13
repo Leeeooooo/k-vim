@@ -324,10 +324,10 @@ endif
 
 " Treat long lines as break lines (useful when moving around in them)
 " se swap之后，同物理行上线直接跳
-" nnoremap k gk
-" nnoremap gk k
-" nnoremap j gj
-" nnoremap gj j
+nnoremap k gk
+nnoremap gk k
+nnoremap j gj
+nnoremap gj j
 
 " F1 - F6 设置
 
