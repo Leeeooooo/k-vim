@@ -84,7 +84,6 @@ zstyle ':omz:lib:theme-and-appearance' gnu-ls yes
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  ag
   extract
   git
   z
