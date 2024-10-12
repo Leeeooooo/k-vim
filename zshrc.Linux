@@ -79,7 +79,6 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  ag
   docker
   extract
   git
@@ -135,4 +134,5 @@ export FZF_CTRL_T_OPTS="--layout reverse --preview 'batcat --theme=Solarized\ \(
 POWERLEVEL9K_VCS_GIT_ICON=''
 POWERLEVEL9K_VCS_GIT_GITHUB_ICON=''
 
+export iterm2_hostname=10.9.60.50:22
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
