@@ -115,6 +115,9 @@ set magic
 set backspace=eol,start,indent
 set whichwrap+=<,>,h,l
 
+" 防止在末尾添加新行
+set nofixendofline
+
 "==========================================
 " Display Settings 展示/排版等界面格式设置
 "==========================================

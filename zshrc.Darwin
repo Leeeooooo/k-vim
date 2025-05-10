@@ -118,6 +118,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vi="vim"
 alias rm="$ZSH/custom/plugins/k-vim/safe_rm_mac.sh"
+alias v="bash /Users/leo/WorkSpace/Momenta/vpn.sh"
 
 setopt nonomatch
 

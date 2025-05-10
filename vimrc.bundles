@@ -30,6 +30,9 @@ call plug#begin('~/.vim/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
+" ai
+Plug 'github/copilot.vim'
+
 " lint
 Plug 'dense-analysis/ale'
 
@@ -249,8 +252,8 @@ if count(g:bundle_groups, 'python')
     " pip install black
     " https://black.readthedocs.io/en/stable/editor_integration.html
 
-    Plug 'psf/black', { 'tag': '22.8.0' }
-    let g:black_linelength=120
+    Plug 'psf/black'
+    " let g:black_linelength=120
     nnoremap <silent> <Leader>b :Black<CR>
     " format at save
     autocmd BufWritePre *.py execute ':Black'
@@ -344,10 +347,12 @@ if has_key(g:plugs, 'ale')
     " install the lint yourself
     let g:ale_linters = {
     \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-    \   'python': ['flake8'],
+    \   'python': ['flake8', 'black'],
     \   'javascript': ['prettier', 'eslint'],
     \   'html': [],
     \   'go': ['gopls', 'golangci-lint'],
+    \   'c': ['clang-format'],
+    \   'cpp': ['clang-format']
     \}
     " E501 -> 120 chars
     let g:ale_python_flake8_options="--ignore=E121,E123,E126,E226,E24,E704,W503 --max-line-length=120"
@@ -384,6 +389,11 @@ if has_key(g:plugs, 'ale')
 
     " support coc.nvim
     let g:ale_disable_lsp = 1
+    let g:ale_fix_on_save = 1
+    let g:ale_lint_on_text_changed = 'normal'
+    let g:ale_lint_on_insert_leave = 1
+    let g:ale_set_highlights = 0
+    let g:ale_virtualtext_cursor = 'disabled'
 endif
 
 " }}}
@@ -466,8 +476,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+xmap <leader>fm  <Plug>(coc-format-selected)
+nmap <leader>fm  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -767,6 +777,9 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
     " show bookmarks in nerdtree
     " let NERDTreeShowBookmarks = 1
 
+    " 增强NERDTree体验
+    let g:NERDTreeMinimalUI = 1
+    let g:NERDTreeChDirMode = 2
 
     " nerdtreetabs
     map <Leader>n <plug>NERDTreeTabsToggle<CR>
