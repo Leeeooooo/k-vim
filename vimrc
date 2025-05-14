@@ -211,7 +211,8 @@ nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 noremap <silent> <leader>/ :nohlsearch<CR>
-nnoremap / /\v                " 智能正则搜索
+" 智能正则搜索
+nnoremap / /\v
 vnoremap / /\v
 
 " 选区缩进后保持选中
@@ -250,7 +251,8 @@ noremap c <nop>
 noremap C <nop>
 
 " F1 废弃这个键,防止调出系统帮助
-noremap <F1> <Esc>"
+noremap <F1> <Esc>
+inoremap <F1> <Esc>
 " F2 显示可打印字符开关
 nnoremap <F2> :set list! list?<CR>
 " F3 换行开关
@@ -297,10 +299,10 @@ function! AutoSetFileHead()
 endfunction
 
 " 保存时自动删除行尾空白
-" augroup TrimWhitespace
-"   autocmd!
-"   autocmd BufWritePre * :%s/\s\+$//e
-" augroup END
+augroup TrimWhitespace
+  autocmd!
+  autocmd BufWritePre * :%s/\s\+$//e
+augroup END
 
 "===============================================================================
 " Theme Settings  主题设置
@@ -321,11 +323,14 @@ set guioptions+=b " 显示标签栏
 
 colorscheme solarized
 hi Normal ctermbg=none
-hi Visual cterm=none ctermbg=8 ctermfg=0
 hi Comment cterm=italic gui=italic
+" hi Visual cterm=none ctermbg=8 ctermfg=0
+hi QuickScopePrimary cterm=reverse gui=reverse
+hi! link Visual QuickScopePrimary
+
 hi! link SignColumn LineNr
-" hi! link ShowMarksHLl DiffAdd
-" hi! link ShowMarksHLu DiffChange
+hi! link ShowMarksHLl DiffAdd
+hi! link ShowMarksHLu DiffChange
 
 " for error highlight，防止错误整行标红导致看不清
 highlight clear SpellBad

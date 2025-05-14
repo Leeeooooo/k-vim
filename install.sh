@@ -93,7 +93,7 @@ install_plugs() {
     vim -u "$HOME/.vimrc.bundles" +PlugInstall! +PlugClean! +qall
     # export SHELL=$system_shell
 
-    vim -c 'echo "正在安装coc.nvim插件，请稍候..."' +'CocInstall -sync coc-syntax coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh' +qall
+    vim -c 'echo "正在安装coc.nvim插件，请稍候..."' +'CocInstall -sync coc-snippets coc-pairs coc-highlight coc-git coc-emmet coc-yaml coc-vimlsp coc-pyright coc-json coc-cmake coc-clangd coc-protobuf coc-markdownlint coc-sh' +qall
 }
 
 install() {
