@@ -79,7 +79,7 @@ install_dependencies() {
         Darwin*)
             echo "  当前为 macOS 系统, 使用 brew 安装软件包..."
             brew install black flake8 pylint fzf node the_silver_searcher shellcheck shfmt clang-format yamllint
-            npm install -g eslint prettier markdownlint-cli jsonlint
+            npm install -g eslint prettier markdownlint-cli jsonlint universal-ctags
             ;;
 
         *)
