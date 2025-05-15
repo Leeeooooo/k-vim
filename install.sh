@@ -71,9 +71,9 @@ install_dependencies() {
         Linux*)
             echo "  当前为 Linux 系统, 使用 apt 安装软件包..."
             sudo apt update -qq
-            sudo apt install -yqq fzf nodejs npm silversearcher-ag shellcheck shfmt clang-format
+            sudo apt install -yqq fzf nodejs npm silversearcher-ag shellcheck shfmt clang-format python3.10-venv universal-ctags
             sudo pip3 install -q black flake8 pylint yamllint
-            sudo npm install -g eslint prettier markdownlint-cli jsonlint
+            sudo npm install -g eslint prettier markdownlint-cli jsonlint universal-ctags
             ;;
 
         Darwin*)
