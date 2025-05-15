@@ -17,9 +17,9 @@ Plug 'vim-airline/vim-airline-themes'
 
 " 文件浏览 & Icons
 Plug 'preservim/nerdtree' |
-            \ Plug 'jistr/vim-nerdtree-tabs' |
-            \ Plug 'Xuyuanp/nerdtree-git-plugin' |
-            \ Plug 'ryanoasis/vim-devicons'
+    \ Plug 'jistr/vim-nerdtree-tabs' |
+    \ Plug 'Xuyuanp/nerdtree-git-plugin' |
+    \ Plug 'ryanoasis/vim-devicons'
 
 " 标签
 Plug 'majutsushi/tagbar'
@@ -141,11 +141,14 @@ let g:airline_powerline_fonts = 1
 " let g:airline#extensions#whitespace#symbol = '!'
 " 是否打开tabline
 " let g:airline#extensions#tabline#enabled = 1
+" 支持异步 lint 状态联动
+let g:airline#extensions#ale#enabled = 1
+let g:airline_section_error = airline#section#create_right(['%{airline#extensions#ale#get_error()}'])
+let g:airline_section_warning = airline#section#create_right(['%{airline#extensions#ale#get_warning()}'])
 
 "===============================================================================
 " nerdtree
 "===============================================================================
-map <leader>n :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
 "close vim if the only window left open is a NERDTree
@@ -155,6 +158,8 @@ let g:NERDTreeMapOpenSplit = 's'
 let g:NERDTreeMapOpenVSplit = 'v'
 " show bookmarks in nerdtree
 let NERDTreeShowBookmarks = 1
+" 显示隐藏文件
+let g:NERDTreeShowHidden = 1
 
 " 增强NERDTree体验
 let g:NERDTreeMinimalUI = 1
@@ -183,13 +188,6 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
     \ 'Ignored'   : "☒",
     \ "Unknown"   : "?"
     \ }
-
-let NERDTreeMinimalUI          = 1
-let g:NERDTreeMapOpenSplit     = 's'
-let g:NERDTreeMapOpenVSplit    = 'v'
-nnoremap <Leader>n <Plug>NERDTreeTabsToggle<CR>
-nnoremap <F9> :TagbarToggle<CR>
-let g:tagbar_autofocus         = 1
 
 "===============================================================================
 " tagbar
@@ -226,17 +224,16 @@ let g:ctrlsf_auto_close    = 0
 let g:ctrlsf_confirm_save  = 0
 let g:ctrlsf_ignore_dir    = ['static/doc','assets','vendor']
 let g:ctrlsf_mapping = {
-\  'split' : '<Space>',
-\  'open'  : '<C-o>',
-\  'prev'  : 'p',
-\  'next'  : 'n',
-\  'quit'  : 'q'
-\}
+    \  'split' : '<Space>',
+    \  'open'  : '<C-o>',
+    \  'prev'  : 'p',
+    \  'next'  : 'n',
+    \  'quit'  : 'q'
+    \}
 
 "===============================================================================
 " oscyank
 "===============================================================================
-let g:oscyank_silent = 0
 vnoremap <C-c> :OSCYankVisual<CR>
 
 "===============================================================================
@@ -250,26 +247,26 @@ let g:ale_fix_on_save           = 1
 let g:ale_python_flake8_options = '--max-line-length=120'
 
 let g:ale_linters = {
-\   'python': ['flake8', 'pylint'],
-\   'javascript': ['eslint', 'prettier'],
-\   'sh': ['shellcheck'],
-\   'c': ['clang-format'],
-\   'cpp': ['clang-format'],
-\   'markdown': ['markdownlint'],
-\   'json': ['jsonlint'],
-\   'yaml': ['yamllint'],
-\   'dockerfile': ['hadolint'],
-\}
+    \   'python': ['flake8', 'pylint'],
+    \   'javascript': ['eslint', 'prettier'],
+    \   'sh': ['shellcheck'],
+    \   'c': ['clang-format'],
+    \   'cpp': ['clang-format'],
+    \   'markdown': ['markdownlint'],
+    \   'json': ['jsonlint'],
+    \   'yaml': ['yamllint'],
+    \   'dockerfile': ['hadolint'],
+    \}
 let g:ale_fixers = {
-\   '*': ['trim_whitespace'],
-\   'python': ['black'],
-\   'javascript': ['prettier'],
-\   'typescript': ['prettier'],
-\   'shell': ['shfmt'],
-\   'markdown': ['prettier'],
-\   'json': ['prettier'],
-\   'yaml': ['prettier'],
-\}
+    \   '*': ['trim_whitespace'],
+    \   'python': ['black'],
+    \   'javascript': ['prettier'],
+    \   'typescript': ['prettier'],
+    \   'shell': ['shfmt'],
+    \   'markdown': ['prettier'],
+    \   'json': ['prettier'],
+    \   'yaml': ['prettier'],
+    \}
 
 let g:ale_python_flake8_options="--ignore=E121,E123,E126,E226,E24,E704,W503 --max-line-length=120"
 
@@ -310,9 +307,9 @@ nnoremap <Leader>s :call ToggleErrors()<cr>
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config
 inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
+    \ coc#pum#visible() ? coc#pum#next(1) :
+    \ CheckBackspace() ? "\<Tab>" :
+    \ coc#refresh()
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 " Make <CR> to accept selected completion item or notify coc.nvim to format
@@ -321,15 +318,15 @@ inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Use <c-space> to trigger completion
 if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
+    inoremap <silent><expr> <c-space> coc#refresh()
 else
-  inoremap <silent><expr> <c-@> coc#refresh()
+    inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
 " Use `[g` and `]g` to navigate diagnostics
@@ -347,11 +344,11 @@ nmap <silent><nowait> gr <Plug>(coc-references)
 nnoremap <silent> K :call ShowDocumentation()<CR>
 
 function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
+    if CocAction('hasProvider', 'hover')
+        call CocActionAsync('doHover')
+    else
+        call feedkeys('K', 'in')
+    endif
 endfunction
 
 " Highlight the symbol and its references when holding the cursor
@@ -362,12 +359,12 @@ nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code
 xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+vmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s)
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+    autocmd!
+    " Setup formatexpr specified filetype(s)
+    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
 augroup end
 
 " Applying code actions to the selected code block
@@ -403,12 +400,12 @@ omap ac <Plug>(coc-classobj-a)
 
 " Remap <C-f> and <C-b> to scroll float windows/popups
 if has('nvim-0.4.0') || has('patch-8.2.0750')
-  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+    nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+    nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+    inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+    inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+    vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+    vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
 
 " Use CTRL-S for selections ranges
@@ -454,18 +451,19 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " 取消默认 Tab 映射，优先用 coc 或自己触发
 let g:copilot_no_tab_map = v:true
 inoremap <silent><expr> <Tab>
-  \ coc#pum#visible()   ? coc#pum#next(1)   :
-  \ copilot#Accept("\<Tab>")
+    \ coc#pum#visible()   ? coc#pum#next(1)   :
+    \ copilot#Accept("\<Tab>")
 inoremap <silent><expr> <S-Tab>
-  \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+    \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 inoremap <silent><expr> <C-J> copilot#Accept("\<CR>")
 
 "===============================================================================
 " nerdcommenter
 "===============================================================================
-let g:NERDSpaceDelims=1
+let g:NERDSpaceDelims = 1
+let g:NERDCompactSexyComs = 1
 let g:NERDAltDelims_python = 1
-let g:NERDDefaultAlign="left"
+let g:NERDDefaultAlign = "left"
 
 "===============================================================================
 " rainbow_parentheses
@@ -500,9 +498,9 @@ au Syntax * RainbowParenthesesLoadBraces
 "===============================================================================
 " solarized
 "===============================================================================
-let g:solarized_termtrans=1
-let g:solarized_contrast="normal"
-let g:solarized_visibility="normal"
+let g:solarized_termtrans = 1
+let g:solarized_contrast = "normal"
+let g:solarized_visibility = "normal"
 
 "===============================================================================
 " vim-expand-region
@@ -566,3 +564,4 @@ autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underlin
 " gundo
 "===============================================================================
 nnoremap <silent> <leader>u :GundoToggle<CR>
+let g:gundo_prefer_python3=1
