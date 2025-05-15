@@ -1,430 +1,308 @@
-" ==========================================
+"===============================================================================
 " bundle 插件管理和配置项
-" ==========================================
+"===============================================================================
 
-"------------------------------------------- begin of configs --------------------------------------------
-
-" ################### 包依赖 #####################
-" package dependence:  ctags, ag(the_silver_searcher)
-" brew install ag fzf black flake8 node pyright
-" python dependence:   pip install flake8 isort black
-
-" 非兼容vi模式。去掉讨厌的有关vi一致性模式，避免以前版本的一些bug和局限
-set nocompatible
-filetype off " required! turn off
-
-" ################### 插件管理 ###################
-
-" 自定义需要的插件集合
-if !exists('g:bundle_groups')
-    let g:bundle_groups=['python', 'tmux', 'json']
-    " let g:bundle_groups=['tmux', 'markdown', 'golang', 'rust', 'python', 'php', 'ruby', 'javascript', 'coffeescript', 'shell', 'json', 'css', 'less', 'html', 'gtd']
-endif
-
-" ----------------------------------------------------------------------------
-" 使用 vim-plug 管理插件
-" vim plugin bundle control, command model
-" ----------------------------------------------------------------------------
-
+"===============================================================================
+" 插件管理
+"===============================================================================
 call plug#begin('~/.vim/bundle')
 
-" 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
-
-" ai
-Plug 'github/copilot.vim'
-
-" ssh clipboard
-Plug 'ojroques/vim-oscyank'
-
-" lint
-Plug 'dense-analysis/ale'
-
-" Group dependencies, vim-snippets depends on ultisnips
-" 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
-" Snippets are separated from the engine. Add this if you want them:
-" Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-
-" auto complete
-" 代码自动补全
-" Use release branch (recommend)
-Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'npm ci'}
-
-" 自动补全单引号，双引号等
-" Plug 'Raimondi/delimitMate'
-" 自动补全html/xml标签
-Plug 'docunext/closetag.vim', { 'for': ['html', 'xml'] }
-
-" quick edit
-" 快速注释
-Plug 'scrooloose/nerdcommenter'
-
-
-" 快速加入修改环绕字符
-" for repeat -> enhance surround.vim, . to repeat command
-Plug 'tpope/vim-repeat' | Plug 'tpope/vim-surround'
-" trailingwhitespace
-" 快速去行尾空格 [, + <Space>]
-Plug 'bronson/vim-trailing-whitespace'
-" easyalign
-" 快速赋值语句对齐
-Plug 'junegunn/vim-easy-align'
-
-" quick movement
-" easymotion
-"更高效的移动 [,, + w/fx/h/j/k/l]
-Plug 'easymotion/vim-easymotion'
-
-" 更高效的行内移动, f/F/t/T, 才触发
-" quickscope
-Plug 'unblevable/quick-scope'
-
-Plug 'vim-scripts/matchit.zip'
-" signature
-" 显示marks - 方便自己进行标记和跳转
-" m[a-zA-Z] add mark
-" '[a-zA-Z] go to mark
-" m<Space>  del all marks
-" m/        list all marks
-" m.        add new mark just follow previous mark
-Plug 'kshenoy/vim-signature'
-
-" quick selection and edit
-" expandregion
-" 选中区块
-Plug 'terryma/vim-expand-region'
-" 多光标选中编辑
-" multiplecursors
-Plug 'terryma/vim-multiple-cursors'
-
-" quick locate file or function
-" 文件搜索
-" change to https://github.com/junegunn/fzf.vim
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'tracyone/fzf-funky',{'on': 'FzfFunky'}
-
-
-" ctrlsf 类似sublimetext的搜索, install ag first
-Plug 'dyng/ctrlsf.vim'
-" incsearch
-" Plug 'haya14busa/incsearch.vim'
-" map /  <Plug>(incsearch-forward)
-" map ?  <Plug>(incsearch-backward)
-" map g/ <Plug>(incsearch-stay)
-
-" quick run
-" quickrun
-" Plug 'thinca/vim-quickrun'
-
-" git
-" fugitive
+" Git & Diff
 Plug 'tpope/vim-fugitive'
-" vim-signify
-if has('nvim') || has('patch-8.0.902')
-    Plug 'mhinz/vim-signify'
-else
-    Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
-endif
+Plug 'mhinz/vim-signify'
 
-" gundo
-" edit history, 可以查看回到某个历史状态
-Plug 'sjl/gundo.vim'
-
-" view
-" airline
-" 状态栏增强展示
+" 状态栏
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-" rainbow_parentheses
-" 括号显示增强
-Plug 'kien/rainbow_parentheses.vim'
-" 主题 solarized
-" solarized
-Plug 'altercation/vim-colors-solarized'
-" molokai
-" 主题 molokai
-" Plug 'tomasr/molokai'
 
-
-" nav
-" nerdtree nerdtreetabs
+" 文件浏览 & Icons
 Plug 'preservim/nerdtree' |
             \ Plug 'jistr/vim-nerdtree-tabs' |
             \ Plug 'Xuyuanp/nerdtree-git-plugin' |
             \ Plug 'ryanoasis/vim-devicons'
-" ctrlspace
-Plug 'vim-ctrlspace/vim-ctrlspace'
-" tagbar
+
+" 标签
 Plug 'majutsushi/tagbar'
 
-" text object
-" 支持自定义文本对象
-Plug 'kana/vim-textobj-user'
-" 增加行文本对象: l   dal yal cil
-Plug 'kana/vim-textobj-line'
-" 增加缩进文本对象: i   dai yai cii - 相同缩进属于同一块
-Plug 'kana/vim-textobj-indent'
+" ctrlspace
+Plug 'vim-ctrlspace/vim-ctrlspace'
 
-" 增加文件文本对象: e   dae yae cie
-Plug 'kana/vim-textobj-entire'
 
+" 搜索 & FZF
+Plug 'junegunn/fzf',        { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'tracyone/fzf-funky',  { 'on': 'FzfFunky' }
+
+" 快速搜索 (CtrlSF)
+Plug 'dyng/ctrlsf.vim'
+
+" 终端复制 (OSC52)
+Plug 'ojroques/vim-oscyank'
+
+" 语法检查
+Plug 'dense-analysis/ale'
+
+" 智能补全 & Copilot
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'npm ci'}
+Plug 'github/copilot.vim'
+Plug 'honza/vim-snippets'
+
+  " 括号补全 & 注释
+Plug 'tpope/vim-repeat' | Plug 'tpope/vim-surround'
+Plug 'scrooloose/nerdcommenter'
+" Plug 'bronson/vim-trailing-whitespace'
+
+" 括号显示增强
+Plug 'kien/rainbow_parentheses.vim'
+
+" 主题 solarized
+Plug 'altercation/vim-colors-solarized'
+
+" 多光标 & 区块
+Plug 'terryma/vim-expand-region'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'junegunn/vim-easy-align'
+
+" 匹配增强
+Plug 'vim-scripts/matchit.zip'
 Plug 'wellle/targets.vim'
 
-if count(g:bundle_groups, 'tmux')
-    " tmux
-    " For tmux navigator Ctrl-hjkl
-    Plug 'christoomey/vim-tmux-navigator'
-endif
+" 快速移动
+Plug 'easymotion/vim-easymotion'
+Plug 'kshenoy/vim-signature'
+" quickscope
+Plug 'unblevable/quick-scope'
 
-if count(g:bundle_groups, 'markdown')
-    Plug 'plasticboy/vim-markdown', {'for': 'md'}
-    let g:vim_markdown_folding_disabled=1
-    " https://github.com/suan/vim-instant-markdown
-    " npm -g install instant-markdown-d
-    " Plug 'suan/vim-instant-markdown'
-    " let g:instant_markdown_slow = 1
-    " let g:instant_markdown_autostart = 0
-    " map <F12> :InstantMarkdownPreview<CR>
-endif
+" Undo Tree
+Plug 'sjl/gundo.vim'
 
-if count(g:bundle_groups, 'golang')
-    " 1. vim a.go
-    " 2. :GoInstallBinaries
-    " 3. :GoUpdateBinaries
-    " vimgo  https://github.com/fatih/vim-go-tutorial#quick-setup
-    Plug 'fatih/vim-go' ", {'for': 'go', 'do': ':GoInstallBinaries'}
+" tmux
+Plug 'christoomey/vim-tmux-navigator'
 
-    " format with goimports instead of gofmt
-    let g:go_fmt_command = "goimports"
-    let g:go_fmt_fail_silently = 1
-    let g:go_highlight_types = 1
-    let g:go_highlight_fields = 1
-    let g:go_highlight_functions = 1
-    let g:go_highlight_function_calls = 1
-    let g:go_highlight_extra_types = 1
+" 语言支持（按需启用）
+"-------------------------------------------------------------------------------
+" go
+" Plug 'fatih/vim-go'
 
-    let g:go_highlight_structs = 1
-    let g:go_highlight_operators = 1
-    let g:go_highlight_methods = 1
-    let g:go_highlight_build_constraints = 1
-    let g:go_highlight_generate_tags = 1
-    " https://github.com/golang/go/wiki/gopls
-    let g:go_def_mode='gopls'
-    let g:go_info_mode='gopls'
+" rust
+" Plug 'rust-lang/rust.vim'
 
-    " automatically highlight variable your cursor is on
-    let g:go_auto_sameids = 0
+" python
+Plug 'hdima/python-syntax', {'for': 'python'}
+Plug 'psf/black', {'for': 'python'}
+autocmd BufWritePre *.py execute ':Black'
 
+" javascript
+Plug 'othree/yajs.vim' | Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 
-    autocmd FileType go nmap <leader>t  <Plug>(go-test)
-    " run :GoBuild or :GoTestCompile based on the go file
-    function! s:build_go_files()
-        let l:file = expand('%')
-        if l:file =~# '^\f\+_test\.go$'
-            call go#test#Test(0, 1)
-        elseif l:file =~# '^\f\+\.go$'
-            call go#cmd#Build(0)
-        endif
-    endfunction
-    autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-    autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+" markdown
+Plug 'plasticboy/vim-markdown', {'for': ['markdown', 'markdown.mkd']}
+let g:vim_markdown_folding_disabled=1
 
-    " autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
+" json
+Plug 'neoclide/jsonc.vim', {'for': ['json', 'jsonc']}
+Plug 'elzr/vim-json', {'for': ['json', 'jsonc']}
+let g:vim_json_syntax_conceal = 0
 
-endif
+" html
+Plug 'mattn/emmet-vim', { 'for': 'html' }
 
-if count(g:bundle_groups, 'rust')
-    Plug 'rust-lang/rust.vim'
-endif
+" xml
+Plug 'docunext/closetag.vim', { 'for': ['html', 'xml'] }
 
-if count(g:bundle_groups, 'python')
-    " for python.vim syntax highlight
-    " pythonsyntax
-    let python_highlight_all = 1
-    " Plug 'hdima/python-syntax'
-    " Plug 'wklken/python-syntax'
-    " Plug 'hynek/vim-python-pep8-indent'
-    " Plug 'Glench/Vim-Jinja2-Syntax'
-
-    " isort  https://github.com/timothycrosley/isort#readme + https://github.com/fisadev/vim-isort#installation
-    " Plug 'fisadev/vim-isort'
-    " Shift-V 上下选中, ctrl + i 规范化
-    " let g:vim_isort_map = '<C-i>'
-
-    " pip install black
-    " https://black.readthedocs.io/en/stable/editor_integration.html
-
-    Plug 'hdima/python-syntax', {'for': 'python'}
-    Plug 'psf/black', {'for': 'python'}
-    nnoremap <silent> <Leader>b :Black<CR>
-    " format at save
-    autocmd BufWritePre *.py execute ':Black'
-endif
-
-if count(g:bundle_groups, 'php')
-    " piv
-    " shift-v可以查看函数手册 / leader-pd生成注释
-    Plug 'spf13/PIV'
-    let g:DisableAutoPHPFolding = 1
-endif
-
-if count(g:bundle_groups, 'ruby')
-    Plug 'vim-ruby/vim-ruby'
-    Plug 'tpope/vim-rails'
-    " dir / dar
-    Plug 'nelstrom/vim-textobj-rubyblock'
-
-    " 有bug, 和当前有冲突, 尚未解决, 不要打开 => TODO: solve this problem
-    " Plug 'tpope/vim-endwise'
-endif
-
-if count(g:bundle_groups, 'javascript')
-    " javascript
-    " 注意: syntax这个插件要放前面
-    Plug 'othree/yajs.vim' | Plug 'pangloss/vim-javascript'
-
-    " TODO: jquery? for, remove or keep
-    Plug 'othree/javascript-libraries-syntax.vim'
-    let g:used_javascript_libs = 'jquery,underscore,backbone'
-    let g:html_indent_inctags = "html,body,head,tbody"
-    let g:html_indent_script1 = "inc"
-    let g:html_indent_style1 = "inc"
-
-    " for javascript 自动补全, 配合YCM, 需要安装全局环境的（非nvm中) node.js&npm
-    " 安装完成后还需要在 bundle/tern_for_vim 下执行 npm install 安装依赖 `cd ~/.vim/bundle/tern_for_vim && npm install`
-    " see https://github.com/marijnh/tern_for_vim
-    " Plug 'marijnh/tern_for_vim', {'do': 'npm install'}
-endif
+" less
+"Plug 'groenewege/vim-less'
+"
+"-------------------------------------------------------------------------------
 
 
-if count(g:bundle_groups, 'coffeescript')
-    Plug 'kchmck/vim-coffee-script'
-endif
-
-if count(g:bundle_groups, 'shell')
-    Plug 'Shougo/vimshell.vim'
-endif
-
-if count(g:bundle_groups, 'json')
-    " json
-    Plug 'elzr/vim-json', {'for': 'json'}
-    let g:vim_json_syntax_conceal = 0
-
-    Plug 'neoclide/jsonc.vim'
-endif
-
-if count(g:bundle_groups, 'css')
-    " css
-    " not work in iterm2 which termianl selection is not xterm-256, and it slow
-    Plug 'ap/vim-css-color'
-
-    " 这个有坑, see issue https://github.com/wklken/k-vim/issues/49
-    " Plug 'gorodinskiy/vim-coloresque'
-    " Plug 'lilydjwg/colorizer'
-endif
-
-if count(g:bundle_groups, 'less')
-  " ###### vim.less : less 自动更新##########
-  Plug 'groenewege/vim-less'
-  autocmd BufWritePost *.less :!lessc % > %:p:r.css
-endif
-
-if count(g:bundle_groups, 'html')
-  " ###### emmet HTML complete #########
-  Plug 'mattn/emmet-vim'
-endif
-
-if count(g:bundle_groups, 'gtd')
-    Plug 'wakatime/vim-wakatime'
-endif
-
-" Add plugins to &runtimepath
 call plug#end()
 
+"===============================================================================
+" fugitive
+"===============================================================================
+nnoremap <leader>gb :Git blame<CR>
+nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>gl :Glog<CR>
+nnoremap <leader>gs :Gstatus<CR>
 
-" ################### 基础 ######################
+"===============================================================================
+" airline
+"===============================================================================
+" 设置状态栏主题
+let g:airline_theme='papercolor'
+"安装字体后设置此项
+let g:airline_powerline_fonts = 1
+" if !exists('g:airline_symbols')
+"     let g:airline_symbols = {}
+" endif
+" 关闭状态显示空白符号计数
+" let g:airline#extensions#whitespace#enabled = 0
+" let g:airline#extensions#whitespace#symbol = '!'
+" 是否打开tabline
+" let g:airline#extensions#tabline#enabled = 1
 
-" vim-oscyank {{{
-vnoremap <C-c> :OSCYankVisual<CR>
+"===============================================================================
+" nerdtree
+"===============================================================================
+map <leader>n :NERDTreeToggle<CR>
+let NERDTreeHighlightCursorline=1
+let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
+"close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | end
+" s/v 分屏打开文件
+let g:NERDTreeMapOpenSplit = 's'
+let g:NERDTreeMapOpenVSplit = 'v'
+" show bookmarks in nerdtree
+let NERDTreeShowBookmarks = 1
+
+" 增强NERDTree体验
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeChDirMode = 2
+
+" nerdtreetabs
+map <Leader>n <plug>NERDTreeTabsToggle<CR>
+" 关闭同步
+" let g:nerdtree_tabs_synchronize_view=0
+" let g:nerdtree_tabs_synchronize_focus=0
+" 是否自动开启nerdtree
+" thank to @ListenerRi, see https://github.com/wklken/k-vim/issues/165
+let g:nerdtree_tabs_open_on_console_startup=0
+let g:nerdtree_tabs_open_on_gui_startup=0
+let g:NERDTreeShowIgnored = 1
+let g:NERDTreeGitStatusShowIgnored = 1
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+    \ "Modified"  : "\uF06A",
+    \ "Staged"    : "\uF055",
+    \ "Untracked" : "\uF059",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : "☒",
+    \ "Unknown"   : "?"
+    \ }
+
+let NERDTreeMinimalUI          = 1
+let g:NERDTreeMapOpenSplit     = 's'
+let g:NERDTreeMapOpenVSplit    = 'v'
+nnoremap <Leader>n <Plug>NERDTreeTabsToggle<CR>
+nnoremap <F9> :TagbarToggle<CR>
+let g:tagbar_autofocus         = 1
+
+"===============================================================================
+" tagbar
+"===============================================================================
+map <Leader>b :TagbarToggle<CR>
+let g:tagbar_autofocus = 1
+let g:tagbar_autoshowtag = 1
+let g:tagbar_show_visibility = 1
+
+"===============================================================================
+" ctrlspace
+"===============================================================================
+let g:airline_exclude_preview = 1
+hi CtrlSpaceSelected guifg=#586e75 guibg=#eee8d5 guisp=#839496 gui=reverse,bold ctermfg=10 ctermbg=7 cterm=reverse,bold
+hi CtrlSpaceNormal   guifg=#839496 guibg=#021B25 guisp=#839496 gui=NONE ctermfg=12 ctermbg=0 cterm=NONE
+hi CtrlSpaceSearch   guifg=#cb4b16 guibg=NONE gui=bold ctermfg=9 ctermbg=NONE term=bold cterm=bold
+hi CtrlSpaceStatus   guifg=#839496 guibg=#002b36 gui=reverse term=reverse cterm=reverse ctermfg=12 ctermbg=8
+
+"===============================================================================
+" fzf
+"===============================================================================
+nnoremap <Leader>p :Files<CR>
+nnoremap <Leader>f :History<CR>
+nnoremap <Leader>fu :FzfFunky<CR>
+nnoremap <Leader>fU :execute 'FzfFunky ' . expand('<cword>')<CR>
+
+"===============================================================================
+" ctrlsf
+"===============================================================================
+nmap \ <Plug>CtrlSFCwordPath<CR>
+nnoremap <C-f> :CtrlSF<Space>
+let g:ctrlsf_search_mode   = 'async'
+let g:ctrlsf_auto_close    = 0
+let g:ctrlsf_confirm_save  = 0
+let g:ctrlsf_ignore_dir    = ['static/doc','assets','vendor']
+let g:ctrlsf_mapping = {
+\  'split' : '<Space>',
+\  'open'  : '<C-o>',
+\  'prev'  : 'p',
+\  'next'  : 'n',
+\  'quit'  : 'q'
+\}
+
+"===============================================================================
+" oscyank
+"===============================================================================
 let g:oscyank_silent = 0
-" }}}
+vnoremap <C-c> :OSCYankVisual<CR>
 
-" ale {{{
-if has_key(g:plugs, 'ale')
-    " install the lint yourself
-    let g:ale_linters = {
-    \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-    \   'python': ['flake8', 'black'],
-    \   'javascript': ['prettier', 'eslint'],
-    \   'html': [],
-    \   'go': ['gopls', 'golangci-lint'],
-    \   'c': ['clang-format'],
-    \   'cpp': ['clang-format']
-    \}
-    " E501 -> 120 chars
-    let g:ale_python_flake8_options="--ignore=E121,E123,E126,E226,E24,E704,W503 --max-line-length=120"
+"===============================================================================
+" ale
+"===============================================================================
+" 关闭内置 LSP，避免和 coc 冲突
+let g:ale_disable_lsp           = 1
+let g:ale_lint_on_text_changed  = 'normal'
+let g:ale_lint_on_insert_leave  = 1
+let g:ale_fix_on_save           = 1
+let g:ale_python_flake8_options = '--max-line-length=120'
 
-    let g:ale_sign_error = '✗'
-    let g:ale_sign_warning = '⚡'
+let g:ale_linters = {
+\   'python': ['flake8', 'pylint'],
+\   'javascript': ['eslint', 'prettier'],
+\   'sh': ['shellcheck'],
+\   'c': ['clang-format'],
+\   'cpp': ['clang-format'],
+\   'markdown': ['markdownlint'],
+\   'json': ['jsonlint'],
+\   'yaml': ['yamllint'],
+\   'dockerfile': ['hadolint'],
+\}
+let g:ale_fixers = {
+\   '*': ['trim_whitespace'],
+\   'python': ['black'],
+\   'javascript': ['prettier'],
+\   'typescript': ['prettier'],
+\   'shell': ['shfmt'],
+\   'markdown': ['prettier'],
+\   'json': ['prettier'],
+\   'yaml': ['prettier'],
+\}
 
+let g:ale_python_flake8_options="--ignore=E121,E123,E126,E226,E24,E704,W503 --max-line-length=120"
 
-    let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
-    let g:ale_echo_msg_error_str = 'E'
-    let g:ale_echo_msg_warning_str = 'W'
-    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+" 诊断符号与状态栏
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '⚡'
+let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
-    nmap <silent> <Leader>ep <Plug>(ale_previous_wrap)
-    nmap <silent> <Leader>en <Plug>(ale_next_wrap)
+" 快速定位, 上/下一个诊断
+nmap <silent> <Leader>ep <Plug>(ale_previous_wrap)
+nmap <silent> <Leader>en <Plug>(ale_next_wrap)
 
-    " 关闭语法检查, 鼠标复制代码时用到, 防止把错误标志给复制了
-    nnoremap <silent> <Leader>ec :ALEToggle<CR>
+" 关闭语法检查, 鼠标复制代码时用到, 防止把错误标志给复制了
+nnoremap <silent> <Leader>ec :ALEToggle<CR>
 
-    " troggle quickfix list
-    function! ToggleErrors()
-        let old_last_winnr = winnr('$')
-        lclose
-        if old_last_winnr == winnr('$')
-            " Nothing was closed, open location panel
-            lopen
-        endif
-    endfunction
-    nnoremap <Leader>s :call ToggleErrors()<cr>
+" 快速切换 quickfix
+function! ToggleErrors()
+    let old_last_winnr = winnr('$')
+    lclose
+    if old_last_winnr == winnr('$')
+        " Nothing was closed, open location panel
+        lopen
+    endif
+endfunction
+nnoremap <Leader>s :call ToggleErrors()<cr>
 
-    let g:ale_set_highlights = 1
-    highlight clear ALEErrorSign
-    highlight clear ALEWarningSign
-
-    " support coc.nvim
-    let g:ale_disable_lsp = 1
-    let g:ale_fix_on_save = 1
-    let g:ale_lint_on_text_changed = 'normal'
-    let g:ale_lint_on_insert_leave = 1
-    let g:ale_set_highlights = 0
-    let g:ale_virtualtext_cursor = 'disabled'
-endif
-
-" }}}
-
-" ################### 自动补全 ###################
-
-" coc.nvim {{{
+"===============================================================================
+" coc
+"===============================================================================
 " https://raw.githubusercontent.com/neoclide/coc.nvim/master/doc/coc-example-config.vim
-
-" May need for Vim (not Neovim) since coc.nvim calculates byte offset by count
-" utf-8 byte sequence
-set encoding=utf-8
-" Some servers have issues with backup files, see #649
-set nobackup
-set nowritebackup
-
-" Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
-" delays and poor user experience
-set updatetime=300
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved
-set signcolumn=yes
 
 " Use tab for trigger completion with characters ahead and navigate
 " NOTE: There's always complete item selected by default, you may want to enable
@@ -569,276 +447,122 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-" }}}
 
-" ################### 快速编码 ###################
+"===============================================================================
+" copilot
+"===============================================================================
+" 取消默认 Tab 映射，优先用 coc 或自己触发
+let g:copilot_no_tab_map = v:true
+inoremap <silent><expr> <Tab>
+  \ coc#pum#visible()   ? coc#pum#next(1)   :
+  \ copilot#Accept("\<Tab>")
+inoremap <silent><expr> <S-Tab>
+  \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+inoremap <silent><expr> <C-J> copilot#Accept("\<CR>")
 
-" nerdcommenter {{{
-    let g:NERDSpaceDelims=1
-    let g:NERDAltDelims_python = 1
-    let g:NERDDefaultAlign="left"
-" }}}
+"===============================================================================
+" nerdcommenter
+"===============================================================================
+let g:NERDSpaceDelims=1
+let g:NERDAltDelims_python = 1
+let g:NERDDefaultAlign="left"
 
-" trailingwhitespace {{{
-    map <leader><space> :FixWhitespace<cr>
-" }}}
+"===============================================================================
+" rainbow_parentheses
+"===============================================================================
+" 不加入这行, 防止黑色括号出现, 很难识别
+" \ ['black',       'SeaGreen3'],
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
 
-" easyalign {{{
-    vmap <Leader>a <Plug>(EasyAlign)
-    nmap <Leader>a <Plug>(EasyAlign)
-    if !exists('g:easy_align_delimiters')
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+"===============================================================================
+" solarized
+"===============================================================================
+let g:solarized_termtrans=1
+let g:solarized_contrast="normal"
+let g:solarized_visibility="normal"
+
+"===============================================================================
+" vim-expand-region
+"===============================================================================
+vmap v <Plug>(expand_region_expand)
+vmap V <Plug>(expand_region_shrink)
+" Extend the global default
+if exists("*expand_region#custom_text_objects")
+    call expand_region#custom_text_objects({
+    \ 'a]' :1,
+    \ 'ab' :1,
+    \ 'aB' :1,
+    \ 'ii' :0,
+    \ 'ai' :0,
+    \ })
+endif
+
+"===============================================================================
+" vim-multiple-cursors
+"===============================================================================
+let g:multi_cursor_use_default_mapping = 0
+let g:multi_cursor_next_key   = '<C-m>'
+let g:multi_cursor_prev_key   = '<C-p>'
+let g:multi_cursor_skip_key   = '<C-x>'
+let g:multi_cursor_quit_key   = '<Esc>'
+
+"===============================================================================
+" vim-easy-align
+"===============================================================================
+vmap <Leader>a <Plug>(EasyAlign)
+nmap <Leader>a <Plug>(EasyAlign)
+if !exists('g:easy_align_delimiters')
     let g:easy_align_delimiters = {}
-    endif
-    let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
-    " Default:
-    " If a delimiter is in a highlight group whose name matches any of the followings, it will be ignored.
-    let g:easy_align_ignore_groups = ['Comment', 'String']
-" }}}
+endif
+let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
+" Default:
+" If a delimiter is in a highlight group whose name matches any of the followings, it will be ignored.
+let g:easy_align_ignore_groups = ['Comment', 'String']
 
-" ################### 快速移动 ###################
+"===============================================================================
+" easymotion
+"===============================================================================
+let g:EasyMotion_smartcase = 1
+map <Leader><leader>h <Plug>(easymotion-linebackward)
+map <Leader><Leader>j <Plug>(easymotion-j)
+map <Leader><Leader>k <Plug>(easymotion-k)
+map <Leader><leader>l <Plug>(easymotion-lineforward)
+" 重复上一次操作, 类似repeat插件, 很强大
+map <Leader><leader>. <Plug>(easymotion-repeat)
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
 
-" easymotion {{{
-    let g:EasyMotion_smartcase = 1
-    "let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
-    map <Leader><leader>h <Plug>(easymotion-linebackward)
-    map <Leader><Leader>j <Plug>(easymotion-j)
-    map <Leader><Leader>k <Plug>(easymotion-k)
-    map <Leader><leader>l <Plug>(easymotion-lineforward)
-    " 重复上一次操作, 类似repeat插件, 很强大
-    map <Leader><leader>. <Plug>(easymotion-repeat)
-    let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
-" }}}
+"===============================================================================
+" quick-scope
+"===============================================================================
+let g:qs_highlight_on_keys = ['f','F','t','T']
+let g:qs_hi_priority = 2
+autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
+autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
 
-"" quickscope {{{
-    let g:qs_highlight_on_keys = ['f','F','t','T']
-    let g:qs_hi_priority = 2
-    autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
-    autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
-"" }}}
-
-" ################### 快速选中 ###################
-
-" expandregion {{{
-    " map + <Plug>(expand_region_expand)
-    " map _ <Plug>(expand_region_shrink)
-    vmap v <Plug>(expand_region_expand)
-    vmap V <Plug>(expand_region_shrink)
-    " Extend the global default
-    if exists("*expand_region#custom_text_objects")
-        call expand_region#custom_text_objects({
-        \ 'a]' :1,
-        \ 'ab' :1,
-        \ 'aB' :1,
-        \ 'ii' :0,
-        \ 'ai' :0,
-        \ })
-    endif
-
-" }}}
-
-" multiplecursors {{{
-    let g:multi_cursor_use_default_mapping=0
-    " Default mapping
-    let g:multi_cursor_next_key='<C-m>'
-    let g:multi_cursor_prev_key='<C-p>'
-    let g:multi_cursor_skip_key='<C-x>'
-    let g:multi_cursor_quit_key='<Esc>'
-" }}}
-
-" ################### 功能相关 ###################
-
-" fzf fzf-funky {{{
-    nnoremap <Leader>p :Files<CR>
-    nnoremap <leader>f :History<CR>
-
-    nnoremap <Leader>fu :FzfFunky<Cr>
-    " narrow the list down with a word under cursor
-    nnoremap <Leader>fU :execute 'FzfFunky ' . expand('<cword>')<Cr>
-" }}}
-
-" ctrlsf {{{
-    nmap \ <Plug>CtrlSFCwordPath<CR>
-    nnoremap <C-f> :CtrlSF<Space>
-    " " use async in using Vim 8.0+
-    if v:version >= 800
-        let g:ctrlsf_search_mode = 'async'
-    endif
-    " let g:ctrlsf_position = 'below'
-    " let g:ctrlsf_winsize = '30%'
-    let g:ctrlsf_auto_close = 0
-    let g:ctrlsf_confirm_save = 0
-    " Note: cannot use <CR> or <C-m> for open
-    " Use : <sapce> or <tab>
-    let g:ctrlsf_mapping = {
-        \ "split"  : "<Space>",
-        \ "prevw" : "<C-P>",
-        \ "quit"  : "q",
-        \ "next"  : "n",
-        \ "prev"  : "p",
-        \ "popen"   : "",
-        \ "open"  : "<C-O>",
-        \ }
-
-    " ignore those dirs
-    let g:ctrlsf_ignore_dir = ['static/doc', 'assets', 'vendor']
-" }}}
-
-" git.  git操作还是习惯命令行,vim里面处理简单diff编辑操作
-
-" fugitive {{{
-    nnoremap <leader>gb :Git blame<CR>
-    nnoremap <leader>gd :Gdiff<CR>
-    nnoremap <leader>gl :Glog<CR>
-    nnoremap <leader>gs :Gstatus<CR>
-" }}}
-
-" gundo {{{
-    noremap <leader>h :GundoToggle<CR>
-" }}}
-
-" ################### 显示增强 ###################
-
-"  airline {{{
-    let g:airline_theme='papercolor'
-    "安装字体后设置此项
-    let g:airline_powerline_fonts = 1
-    "if !exists('g:airline_symbols')
-        "let g:airline_symbols = {}
-    "endif
-    " 关闭状态显示空白符号计数
-    " let g:airline#extensions#whitespace#enabled = 0
-    " let g:airline#extensions#whitespace#symbol = '!'
-    " 是否打开tabline
-    " let g:airline#extensions#tabline#enabled = 1
-" }}}
-
-
-
-" rainbow_parentheses {{{
-    " 不加入这行, 防止黑色括号出现, 很难识别
-    " \ ['black',       'SeaGreen3'],
-    let g:rbpt_colorpairs = [
-        \ ['brown',       'RoyalBlue3'],
-        \ ['Darkblue',    'SeaGreen3'],
-        \ ['darkgray',    'DarkOrchid3'],
-        \ ['darkgreen',   'firebrick3'],
-        \ ['darkcyan',    'RoyalBlue3'],
-        \ ['darkred',     'SeaGreen3'],
-        \ ['darkmagenta', 'DarkOrchid3'],
-        \ ['brown',       'firebrick3'],
-        \ ['gray',        'RoyalBlue3'],
-        \ ['darkmagenta', 'DarkOrchid3'],
-        \ ['Darkblue',    'firebrick3'],
-        \ ['darkgreen',   'RoyalBlue3'],
-        \ ['darkcyan',    'SeaGreen3'],
-        \ ['darkred',     'DarkOrchid3'],
-        \ ['red',         'firebrick3'],
-        \ ]
-
-    let g:rbpt_max = 16
-    let g:rbpt_loadcmd_toggle = 0
-    au VimEnter * RainbowParenthesesToggle
-    au Syntax * RainbowParenthesesLoadRound
-    au Syntax * RainbowParenthesesLoadSquare
-    au Syntax * RainbowParenthesesLoadBraces
-" }}}
-
-
-" ################### 显示增强-主题 ###################"
-
-" solarized {{{
-    let g:solarized_termtrans=1
-    let g:solarized_contrast="normal"
-    let g:solarized_visibility="normal"
-    " let g:solarized_termcolors=256
-" }}}
-
-" molokai {{{
-    " monokai原始背景色
-    " let g:molokai_original = 1
-    " let g:rehash256=1
-    " let g:python_highlight_pycharm_monokai=1
-" }}}
-
-" ################### 快速导航 ###################
-
-" nerdtree nerdtreetabs {{{
-    " map <leader>n :NERDTreeToggle<CR>
-    let NERDTreeHighlightCursorline=1
-    let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
-    "close vim if the only window left open is a NERDTree
-    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | end
-    " s/v 分屏打开文件
-    let g:NERDTreeMapOpenSplit = 's'
-    let g:NERDTreeMapOpenVSplit = 'v'
-    " show bookmarks in nerdtree
-    " let NERDTreeShowBookmarks = 1
-
-    " 增强NERDTree体验
-    let g:NERDTreeMinimalUI = 1
-    let g:NERDTreeChDirMode = 2
-
-    " nerdtreetabs
-    map <Leader>n <plug>NERDTreeTabsToggle<CR>
-    " 关闭同步
-    " let g:nerdtree_tabs_synchronize_view=0
-    " let g:nerdtree_tabs_synchronize_focus=0
-    " 是否自动开启nerdtree
-    " thank to @ListenerRi, see https://github.com/wklken/k-vim/issues/165
-    let g:nerdtree_tabs_open_on_console_startup=0
-    let g:nerdtree_tabs_open_on_gui_startup=0
-    let g:NERDTreeShowIgnored = 1
-    let g:NERDTreeGitStatusShowIgnored = 1
-    let g:NERDTreeGitStatusIndicatorMapCustom = {
-        \ "Modified"  : "\uF06A",
-        \ "Staged"    : "\uF055",
-        \ "Untracked" : "\uF059",
-        \ "Renamed"   : "➜",
-        \ "Unmerged"  : "═",
-        \ "Deleted"   : "✖",
-        \ "Dirty"     : "✗",
-        \ "Clean"     : "✔︎",
-        \ 'Ignored'   : "☒",
-        \ "Unknown"   : "?"
-        \ }
-
-" }}}
-
-
-" Vim Workspace Controller
-" ctrlspace {{{
-    let g:airline_exclude_preview = 1
-    hi CtrlSpaceSelected guifg=#586e75 guibg=#eee8d5 guisp=#839496 gui=reverse,bold ctermfg=10 ctermbg=7 cterm=reverse,bold
-    hi CtrlSpaceNormal   guifg=#839496 guibg=#021B25 guisp=#839496 gui=NONE ctermfg=12 ctermbg=0 cterm=NONE
-    hi CtrlSpaceSearch   guifg=#cb4b16 guibg=NONE gui=bold ctermfg=9 ctermbg=NONE term=bold cterm=bold
-    hi CtrlSpaceStatus   guifg=#839496 guibg=#002b36 gui=reverse term=reverse cterm=reverse ctermfg=12 ctermbg=8
-" }}}
-
-
-" 标签导航
-" tagbar {{{
-    nmap <F9> :TagbarToggle<CR>
-    let g:tagbar_autofocus = 1
-    let g:tagbar_autoshowtag = 1
-    let g:tagbar_show_visibility = 1
-" }}}
-
-
-" ################### 语言相关 ###################
-
-"" quickrun {{{
-"    let g:quickrun_config = {
-"    \   "_" : {
-"    \       "outputter" : "message",
-"    \   },
-"    \}
-"
-"    let g:quickrun_no_default_key_mappings = 1
-"    nmap <Leader>r <Plug>(quickrun)
-"    map <F10> :QuickRun<CR>
-"" }}}
-
-" ####### temp #######
-
-
-"------------------------------------------- end of configs --------------------------------------------
+"===============================================================================
+" gundo
+"===============================================================================
+nnoremap <silent> <leader>u :GundoToggle<CR>

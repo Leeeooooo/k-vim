@@ -271,35 +271,6 @@ augroup END
 " for # indent, python文件中输入新行时#号注释不切回行首
 autocmd BufNewFile,BufRead *.py inoremap # X<c-h>#
 
-" New file 自动插入文件头
-augroup AutoFileHead
-  autocmd!
-  autocmd BufNewFile *.py,*.sh,*.c,*.cpp,*.cc,*.h,*.java,*.rb call AutoSetFileHead()
-augroup END
-
-function! AutoSetFileHead()
-  let ft=&filetype
-  if ft=='python'
-    call setline(1, '#!/usr/bin/env python')
-    call append(1, '# -*- coding: utf-8 -*-')
-  elseif ft=='sh'
-    call setline(1, '#!/bin/bash')
-  else
-    call setline(1, '/**')
-    call append(1, ' * File: ' . expand('%'))
-    call append(2, ' * Author: wklken')
-    call append(3, ' * Created: ' . strftime('%c'))
-    call append(4, ' **/')
-  endif
-  normal G
-endfunction
-
-" 保存时自动删除行尾空白
-" augroup TrimWhitespace
-"   autocmd!
-"   autocmd BufWritePre * :%s/\s\+$//e
-" augroup END
-
 "===============================================================================
 " Theme Settings  主题设置
 "===============================================================================
