@@ -71,13 +71,15 @@ install_dependencies() {
         Linux*)
             echo "  当前为 Linux 系统, 使用 apt 安装软件包..."
             sudo apt update -qq
-            sudo apt install -yqq fzf nodejs npm silversearcher-ag
-            sudo pip3 install -q black flake8
+            sudo apt install -yqq fzf nodejs npm silversearcher-ag shellcheck shfmt clang-format
+            sudo pip3 install -q black flake8 pylint yamllint
+            sudo npm install -g eslint prettier markdownlint-cli jsonlint
             ;;
 
         Darwin*)
             echo "  当前为 macOS 系统, 使用 brew 安装软件包..."
-            brew install black flake8 fzf node the_silver_searcher
+            brew install black flake8 pylint fzf node the_silver_searcher shellcheck shfmt clang-format yamllint
+            npm install -g eslint prettier markdownlint-cli jsonlint
             ;;
 
         *)

@@ -19,12 +19,7 @@ let g:mapleader = ','           " leader键
 if has('vim_starting')
   set nocompatible
   filetype off
-
-  " 插件目录 & 加载
-  call plug#begin('~/.vim/bundle')
-    source ~/.vimrc.bundles
-  call plug#end()
-
+  source ~/.vimrc.bundles
 endif
 
 " 文件类型 & 缩进 & 语法高亮
@@ -37,6 +32,7 @@ syntax on
 set history=2000                " 命令历史
 set autoread                    " 文件外部修改自动载入
 set nobackup noswapfile         " 不要备份/交换文件
+set nowritebackup               " 不要写入备份文件
 set hidden                      " 缓冲区可后台隐藏
 set viminfo^=%                  " 记住光标最后位置等
 set magic                       " 增强正则
@@ -52,7 +48,7 @@ set title                       " 终端标题变化
 set noerrorbells novisualbell   " 关掉蜂鸣/闪屏
 " set t_vb=                       " 关掉闪屏
 set tm=500                      " 键盘等待时间(ms)
-set clipboard=unnamedplus       " 共享系统剪贴板
+set updatetime=300              " 更新频率
 set ttyfast                     " 认为终端很快
 set lazyredraw                  " 只在必要时重绘
 set nofixendofline              " 不自动在行尾添加换行符
@@ -299,10 +295,10 @@ function! AutoSetFileHead()
 endfunction
 
 " 保存时自动删除行尾空白
-augroup TrimWhitespace
-  autocmd!
-  autocmd BufWritePre * :%s/\s\+$//e
-augroup END
+" augroup TrimWhitespace
+"   autocmd!
+"   autocmd BufWritePre * :%s/\s\+$//e
+" augroup END
 
 "===============================================================================
 " Theme Settings  主题设置
@@ -324,23 +320,22 @@ set guioptions+=b " 显示标签栏
 colorscheme solarized
 hi Normal ctermbg=none
 hi Comment cterm=italic gui=italic
-" hi Visual cterm=none ctermbg=8 ctermfg=0
-hi QuickScopePrimary cterm=reverse gui=reverse
-hi! link Visual QuickScopePrimary
+hi clear Visual
+hi Visual term=reverse cterm=reverse gui=reverse
 
 hi! link SignColumn LineNr
 hi! link ShowMarksHLl DiffAdd
 hi! link ShowMarksHLu DiffChange
 
 " for error highlight，防止错误整行标红导致看不清
-highlight clear SpellBad
-highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
-highlight clear SpellCap
-highlight SpellCap term=underline cterm=underline
-highlight clear SpellRare
-highlight SpellRare term=underline cterm=underline
-highlight clear SpellLocal
-highlight SpellLocal term=underline cterm=underline
+hi clear SpellBad
+hi SpellBad term=standout ctermfg=1 term=underline cterm=underline
+hi clear SpellCap
+hi SpellCap term=underline cterm=underline
+hi clear SpellRare
+hi SpellRare term=underline cterm=underline
+hi clear SpellLocal
+hi SpellLocal term=underline cterm=underline
 
 " Todo/Debug 高亮
 autocmd Syntax * call matchadd('Todo',  '\W\zs\(TODO\|FIXME\|CHANGED\|DONE\|XXX\|BUG\|HACK\)')

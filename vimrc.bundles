@@ -33,6 +33,9 @@ call plug#begin('~/.vim/bundle')
 " ai
 Plug 'github/copilot.vim'
 
+" ssh clipboard
+Plug 'ojroques/vim-oscyank'
+
 " lint
 Plug 'dense-analysis/ale'
 
@@ -45,7 +48,7 @@ Plug 'honza/vim-snippets'
 " auto complete
 " 代码自动补全
 " Use release branch (recommend)
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'npm ci'}
 
 " 自动补全单引号，双引号等
 " Plug 'Raimondi/delimitMate'
@@ -74,7 +77,7 @@ Plug 'easymotion/vim-easymotion'
 
 " 更高效的行内移动, f/F/t/T, 才触发
 " quickscope
-" Plug 'unblevable/quick-scope'
+Plug 'unblevable/quick-scope'
 
 Plug 'vim-scripts/matchit.zip'
 " signature
@@ -146,7 +149,7 @@ Plug 'altercation/vim-colors-solarized'
 
 " nav
 " nerdtree nerdtreetabs
-Plug 'preservim/nerdtree' | 
+Plug 'preservim/nerdtree' |
             \ Plug 'jistr/vim-nerdtree-tabs' |
             \ Plug 'Xuyuanp/nerdtree-git-plugin' |
             \ Plug 'ryanoasis/vim-devicons'
@@ -341,6 +344,11 @@ call plug#end()
 
 
 " ################### 基础 ######################
+
+" vim-oscyank {{{
+vnoremap <C-c> :OSCYankVisual<CR>
+let g:oscyank_silent = 0
+" }}}
 
 " ale {{{
 if has_key(g:plugs, 'ale')
@@ -604,14 +612,11 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
     let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
 " }}}
 
-
 "" quickscope {{{
-"    let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-"    " macvim/gvim会有问题, 暂时注解
-"    let g:qs_first_occurrence_highlight_color = '#afff5f' " gui vim
-"    let g:qs_first_occurrence_highlight_color = 155       " terminal vim
-"    let g:qs_second_occurrence_highlight_color = '#5fffff'  " gui vim
-"    let g:qs_second_occurrence_highlight_color = 81         " terminal vim
+    let g:qs_highlight_on_keys = ['f','F','t','T']
+    let g:qs_hi_priority = 2
+    autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
+    autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
 "" }}}
 
 " ################### 快速选中 ###################
