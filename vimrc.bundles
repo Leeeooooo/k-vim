@@ -304,6 +304,26 @@ nnoremap <Leader>s :call ToggleErrors()<cr>
 "===============================================================================
 " coc
 "===============================================================================
+let g:coc_global_extensions = [
+    \ 'coc-snippets',
+    \ 'coc-protobuf',
+    \ 'coc-pairs',
+    \ 'coc-html',
+    \ 'coc-highlight',
+    \ 'coc-git',
+    \ 'coc-emmet',
+    \ '@hexuhua/coc-copilot@0.0.18',
+    \ 'coc-yaml',
+    \ 'coc-vimlsp',
+    \ 'coc-tsserver',
+    \ 'coc-sh',
+    \ 'coc-pyright',
+    \ 'coc-markdownlint',
+    \ 'coc-json',
+    \ 'coc-cmake',
+    \ 'coc-clangd'
+    \ ]
+
 " https://raw.githubusercontent.com/neoclide/coc.nvim/master/doc/coc-example-config.vim
 
 " Use tab for trigger completion with characters ahead and navigate
@@ -314,7 +334,7 @@ nnoremap <Leader>s :call ToggleErrors()<cr>
 inoremap <silent><expr> <TAB>
     \ coc#pum#visible() ? coc#pum#next(1) :
     \ CheckBackspace() ? "\<Tab>" :
-    \ coc#refresh()
+    \ copilot#Accept("\<Tab>")
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 " Make <CR> to accept selected completion item or notify coc.nvim to format
@@ -455,12 +475,10 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 "===============================================================================
 " 取消默认 Tab 映射，优先用 coc 或自己触发
 let g:copilot_no_tab_map = v:true
-inoremap <silent><expr> <Tab>
-    \ coc#pum#visible()   ? coc#pum#next(1)   :
-    \ copilot#Accept("\<Tab>")
-inoremap <silent><expr> <S-Tab>
-    \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-inoremap <silent><expr> <C-J> copilot#Accept("\<CR>")
+inoremap <silent><expr> <Right> copilot#Accept("\<Right>")
+inoremap <silent><expr> <M-]> copilot#Next()
+inoremap <silent><expr> <M-[> copilot#Previous()
+inoremap <silent><expr> <C-j> coc#refresh()
 
 "===============================================================================
 " nerdcommenter
