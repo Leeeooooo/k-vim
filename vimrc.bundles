@@ -91,6 +91,9 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'hdima/python-syntax', {'for': 'python'}
 Plug 'psf/black', {'for': 'python'}
 autocmd BufWritePre *.py execute ':Black'
+Plug 'fisadev/vim-isort'
+let g:vim_isort_map = '<C-i>'
+let g:vim_isort_python_version = 'python3'
 
 " javascript
 Plug 'othree/yajs.vim' | Plug 'pangloss/vim-javascript', {'for': 'javascript'}
@@ -241,12 +244,15 @@ vnoremap <C-c> :OSCYankVisual<CR>
 "===============================================================================
 " 关闭内置 LSP，避免和 coc 冲突
 let g:ale_disable_lsp           = 1
-let g:ale_lint_on_text_changed  = 'normal'
-let g:ale_lint_on_insert_leave  = 1
 let g:ale_fix_on_save           = 1
+let g:ale_virtualtext_cursor = 0
+let g:ale_virtualtext_error = 0
+let g:ale_virtualtext_warning = 0
+let g:ale_virtualtext_info = 0
+let g:ale_virtualtext_hint = 0
 
 let g:ale_linters = {
-    \   'python': ['flake8', 'pylint'],
+    \   'python': ['flake8', 'pylint', 'isort'],
     \   'javascript': ['eslint', 'prettier'],
     \   'sh': ['shellcheck'],
     \   'c': ['clang-format'],

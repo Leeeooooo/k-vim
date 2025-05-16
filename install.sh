@@ -72,14 +72,14 @@ install_dependencies() {
             echo "  当前为 Linux 系统, 使用 apt 安装软件包..."
             sudo apt update -qq
             sudo apt install -yqq fzf nodejs npm silversearcher-ag shellcheck shfmt clang-format python3.10-venv universal-ctags
-            sudo pip3 install -q black flake8 pylint yamllint
+            sudo pip3 install -q black flake8 pylint yamllint isort
             sudo npm install -g eslint prettier markdownlint-cli jsonlint universal-ctags
             ;;
 
         Darwin*)
             echo "  当前为 macOS 系统, 使用 brew 安装软件包..."
             brew install black flake8 pylint fzf node the_silver_searcher shellcheck shfmt clang-format yamllint
-            npm install -g eslint prettier markdownlint-cli jsonlint universal-ctags
+            npm install -g eslint prettier markdownlint-cli jsonlint universal-ctags isort
             ;;
 
         *)
