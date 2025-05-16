@@ -244,7 +244,6 @@ let g:ale_disable_lsp           = 1
 let g:ale_lint_on_text_changed  = 'normal'
 let g:ale_lint_on_insert_leave  = 1
 let g:ale_fix_on_save           = 1
-let g:ale_python_flake8_options = '--max-line-length=120'
 
 let g:ale_linters = {
     \   'python': ['flake8', 'pylint'],
@@ -253,7 +252,7 @@ let g:ale_linters = {
     \   'c': ['clang-format'],
     \   'cpp': ['clang-format'],
     \   'markdown': ['markdownlint'],
-    \   'json': ['jsonlint'],
+    \   'json': ['jsonc-eslint-parser'],
     \   'yaml': ['yamllint'],
     \   'dockerfile': ['hadolint'],
     \}
