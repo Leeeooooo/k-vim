@@ -270,9 +270,8 @@ let g:ale_fixers = {
     \   'shell': ['shfmt'],
     \   'markdown': ['prettier'],
     \   'json': ['prettier'],
-    \   'yaml': ['prettier'],
     \}
-
+    " \   'yaml': ['prettier'],
 let g:ale_python_flake8_options="--ignore=E121,E123,E126,E226,E24,E704,W503 --max-line-length=120"
 
 " 诊断符号与状态栏
