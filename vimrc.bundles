@@ -267,12 +267,14 @@ let g:ale_fixers = {
     \   'python': ['black'],
     \   'javascript': ['prettier'],
     \   'typescript': ['prettier'],
-    \   'shell': ['shfmt'],
     \   'markdown': ['prettier'],
-    \   'json': ['prettier'],
+    \   'cpp': ['prettier'],
     \}
+    " \   'json': ['prettier'],
+    " \   'sh': ['shfmt'],
     " \   'yaml': ['prettier'],
 let g:ale_python_flake8_options="--ignore=E121,E123,E126,E226,E24,E704,W503 --max-line-length=120"
+let g:ale_shfmt_options = '-i 4 -w'
 
 " 诊断符号与状态栏
 let g:ale_sign_error = '✗'

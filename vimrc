@@ -176,6 +176,8 @@ nnoremap ; :                   " 快捷进入命令行
 nnoremap J G
 nnoremap H ^
 nnoremap L $
+vnoremap H ^
+vnoremap L $
 nnoremap K gg
 nnoremap Y y$                  " Y 同其它大写行为
 nnoremap ' `                   " 交换 ' 和 `
@@ -260,7 +262,7 @@ nnoremap <F3> :set wrap! wrap?<CR>
 augroup FileTypeSettings
   autocmd!
   autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab ai
-  autocmd FileType ruby,html,css,xml,yaml,json setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
+  autocmd FileType cpp,ruby,html,css,xml,yaml,json setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
   autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown setlocal filetype=markdown.mkd
   autocmd BufRead,BufNewFile *.part setlocal filetype=html
   autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
