@@ -117,8 +117,8 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vi="vim"
-alias rm="$ZSH/custom/plugins/k-vim/safe_rm_mac.sh"
-alias v="bash /Users/leo/WorkSpace/Momenta/vpn.sh"
+alias rm="${HOME}/WorkSpace/k-vim/safe_rm_mac.sh"
+alias v="bash ${HOME}/WorkSpace/Momenta/vpn.sh"
 
 setopt nonomatch
 
@@ -134,4 +134,4 @@ export FZF_CTRL_T_OPTS="--layout reverse --preview 'bat --theme=Solarized\ \(dar
 POWERLEVEL9K_VCS_GIT_ICON=''
 POWERLEVEL9K_VCS_GIT_GITHUB_ICON=''
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
